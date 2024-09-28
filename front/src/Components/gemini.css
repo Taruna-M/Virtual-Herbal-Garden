@@ -1,6 +1,261 @@
+
 .gemini {
-    z-index: 10; /* Ensure it's higher than Unity's canvas */
-    position: fixed; /* Use absolute to position it relative to the parent container */
-    top: 0;
-    left: 0; 
+    z-index: 1000;
 }
+
+.gemini-icon {
+    width: 50px; /* Adjust size as needed */
+    height: 50px;
+    border-radius: 50%;
+    background-color: rgba(240, 240, 240, 0.8); /* Semi-transparent background for the icon */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.3s ease; /* Smooth transition for scaling */
+    z-index: 100; /* Higher than Unity */
+    position: fixed; /* Fixed to the viewport */
+    bottom: 20px; /* Distance from the bottom */
+    right: 20px; /* Distance from the right */
+}
+
+.gemini-icon img {
+    width: 100%;
+    height: auto;
+    border-radius: 50%; /* Circular image */
+}
+.Unity {
+    /* Other styles for Unity div */
+    transition: filter 0.3s ease; /* Smooth transition for blur effect */
+}
+
+.Unity.blurred {
+    filter: blur(5px); /* Adjust the blur amount as needed */
+}
+
+/* Chatbox Styles */
+.gemini-chatbox {
+    width: 50vw; /* Set to half of the viewport width */
+    max-width: 400px; /* Optional: limit the max width */
+    height: auto; /* Automatically adjust height */
+    background-color: #49570A;
+    background-size: cover; /* Cover the chatbox area */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    position: fixed; /* Position it over the icon */
+    bottom: 80px; /* Adjust based on icon position */
+    right: 20px; /* Keep it aligned with the icon */
+    padding: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 99; /* Ensure chatbox is above other content, but below the icon */
+    display: none; /* Initially hide the chatbox */
+}
+
+.gemini-chatbox.active {
+    display: block; /* Show the chatbox when active */
+}
+
+/* Other styles remain the same... */
+
+/* Spark Animation */
+.spark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid transparent; /* Placeholder for the spark border */
+    border-radius: 8px; /* Match the border radius of the chatbox */
+    z-index: -1; /* Behind the chatbox */
+    animation: spark-animation 4s linear infinite; /* Spark animation */
+}
+
+@keyframes spark-animation {
+    0% {
+        border-color: gold; /* Color of the spark */
+    }
+    25% {
+        border-color: transparent;
+    }
+    50% {
+        border-color: gold; /* Color of the spark */
+    }
+    75% {
+        border-color: transparent;
+    }
+    100% {
+        border-color: gold; /* Color of the spark */
+    }
+}
+
+/* Scrollable response area */
+.response-area {
+    max-height: 60vh; /* Limit height to 60% of the viewport height */
+    overflow-y: auto; /* Allow vertical scrolling */
+    margin-bottom: 10px; /* Space above the input */
+}
+
+/* Individual message styles */
+.message {
+    margin: 5px 0; /* Space between messages */
+    padding: 8px 12px;
+    border-radius: 15px; /* Rounded corners */
+}
+
+.api-response{
+    background-color: #034c09 ;/* Light green background for user messages with increased opacity */
+    align-self: flex-end;
+    margin-right: 50px; /* Align user messages to the right */ 
+    color: white;/* Add a gap from the right edge */
+}
+
+.user-message  {
+    margin-left: 50px; 
+    background-color: #5ba061; /* Light gray background for responses with increased opacity */
+    align-self: flex-start; /* Align API responses to the left */
+    color: white;/* Add a gap from the left edge */
+}
+.gemini-icon img {
+    transition: box-shadow 0.3s ease;
+}
+
+.gemini-icon img.glow-effect {
+    box-shadow: 0 0 15px 5px rgba(0, 255, 0, 0.7); /* Glowing effect */
+}
+
+/* Chat bubble style */
+.chat-bubble {
+    position: absolute;
+    top: -30px;
+    left: 60px;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    color: #333;
+    z-index: 1;
+    animation: fade-out 3s forwards; /* Make the chat bubble disappear after 3 seconds */
+}
+
+@keyframes fade-out {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        display: none;
+    }
+}
+
+/* Spark animation if needed */
+.spark-animation {
+    animation: spark-animation 4s ease-in-out;
+}
+
+/* Rest of your existing CSS */
+
+
+.input-area {
+    display: flex;
+    align-items: center; /* Center vertically */
+    margin-top: 10px; /* Space between messages and input */
+}
+
+/* Input Box Styles */
+.input-box {
+    flex-grow: 1; /* Take remaining space */
+    height: 40px; /* Height for a neat, thin input */
+    padding: 5px 10px; /* Padding inside the input */
+    border: 1px solid #ccc;
+    background-color: #ccc;
+    border-radius: 20px; /* Rounded corners */
+    outline: none; /* Remove outline on focus */
+    resize: none; /* Disable resizing */
+    font-size: 14px; /* Font size adjustment */
+}
+
+/* Send Button Styles */
+.send-button {
+    background-color: transparent; /* No background */
+    border: none; /* Remove border */
+    cursor: pointer; /* Pointer on hover */
+    margin-left: 10px; /* Space between input and button */
+    padding: 5px; /* Padding around the button */
+    height: 40px; /* Match the input box height */
+    width: 40px; /* Fixed width for the button */
+    display: flex; /* Center icon */
+    justify-content: center; /* Center icon */
+    align-items: center; /* Center icon */
+}
+
+.send-button img {
+    width: 20px; /* Adjust icon size as needed */
+    height: auto; /* Maintain aspect ratio */
+}
+
+/* Flower Indicator Styles */
+.flower-indicator {
+    display: flex;
+    align-self: flex-end; /* Align user messages to the right */
+    margin-left: auto; /* Push user messages to the right */
+    margin-right: 10px;
+    margin: 5px 0; /* Space around the flowers */
+}
+
+.flower {
+    font-size: 24px; /* Flower size */
+    animation: bounce 0.5s ease infinite; /* Bounce effect */
+}
+
+.bounce {
+    animation: bounce 0.5s ease infinite; /* Apply bounce effect */
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0); /* Initial position */
+    }
+    50% {
+        transform: translateY(-10px); /* Bounce up */
+    }
+}
+.gemini-icon img {
+    transition: box-shadow 0.3s ease;
+}
+
+.gemini-icon img.glow-effect {
+    box-shadow: 0 0 15px 5px rgba(0, 255, 0, 0.7); /* Glowing effect */
+}
+
+/* Chat bubble style */
+.chat-bubble {
+    position: absolute;
+    top: -30px;
+    left: 60px;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    color: #333;
+    z-index: 1;
+    animation: fade-out 5s forwards; /* Make the chat bubble disappear after 5 seconds */
+}
+
+@keyframes fade-out {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        display: none;
+    }
+}
+
+/* Spark animation if needed */
+.spark-animation {
+    animation: spark-animation 4s ease-in-out;
+}
+
+/* Rest of your existing CSS */
