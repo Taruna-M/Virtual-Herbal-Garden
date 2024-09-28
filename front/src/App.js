@@ -2,7 +2,7 @@ import React ,{useState} from "react";
 import LoginPage from "./Components/LoginPage";
 import UnityComponent from "./Components/UnityComponent";
 import Navbar from "./Components/Navbar";
-
+import Gemini from "./Components/gemini";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -18,9 +18,9 @@ function App() {
       <LoginPage onLogin={handleLogin} />
     ) : (
       <>
-        <UnityComponent />
+      <UnityComponent/>
         <Navbar />
-        
+        <Gemini/>
       </>
     )}
   </div>

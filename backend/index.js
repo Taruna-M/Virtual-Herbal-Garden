@@ -1,4 +1,6 @@
+require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const path = require('path');
 const app = express(); // Create a new Express app instance
 
@@ -12,6 +14,12 @@ app.use('/garden3', express.static(path.join(__dirname, '../front/public/garden3
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../front/public', 'index.html'));
 });
+app.use(cors());
+app.use(express.json());
+
+const apiRoutes = require('./routes/api');
+app.use('/api', apiRoutes);
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

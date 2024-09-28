@@ -1,0 +1,6 @@
+.gemini {
+    z-index: 10; /* Ensure it's higher than Unity's canvas */
+    position: fixed; /* Use absolute to position it relative to the parent container */
+    top: 0;
+    left: 0; 
+}
