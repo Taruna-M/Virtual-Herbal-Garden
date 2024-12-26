@@ -1,76 +1,91 @@
 /* Icon Button */
+/* Icon Button */
 .plant-icon-btn {
     position: fixed;
-    bottom: 90px; /* Moved upward */
+    bottom: 90px; /* Adjusted upward */
     right: 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
+    background-color: black;
+    color: green;
+    border: 1px solid black;
     border-radius: 50%;
-    width: 60px;
-    height: 60px;
+    width: 50px; /* Decreased size */
+    height: 50px; /* Decreased size */
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 15px 5px rgba(76, 175, 80, 0.8); /* Green glow always visible */
     z-index: 1001;
-  }
-  
-  .plant-icon-btn:hover {
+    transition: box-shadow 0.3s ease;
+    box-shadow: 0 0 15px 5px rgba(0, 255, 0, 0.7); /* Glowing effect */
+}
+
+
+.plant-icon-btn:hover {
     background-color: #388E3C;
-  }
-  
-  /* Popup Box */
-  .plant-search-box {
+}
+
+/* Popup Box */
+.plant-search-box {
     position: fixed;
-    bottom: 150px; /* Adjusted for new icon position */
+    bottom: 150px; /* Adjusted to match icon position */
     right: 20px;
-    width: 350px;
-    background: white;
+    width: 380px;
+    background: #e8f5e9; /* Light green background */
     border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     z-index: 1000;
-    padding: 20px;
+    padding: 15px;
     overflow-y: auto;
-    max-height: 500px; /* Prevent box overflow */
-  }
-  
-  .plant-search-box h2 {
+    max-height: 550px;
+}
+
+/* Header */
+.plant-search-box h2 {
     text-align: center;
     margin-bottom: 10px;
-  }
-  
-  /* Plant Details */
-  .plant-details {
-    margin-top: 10px;
-    font-size: 14px;
-    text-align: center;
-    border-top: 1px solid #ddd;
-    padding-top: 10px;
-  }
-  
-  /* Webcam and Image Preview */
-  .captured-image {
-    width: 120px; /* Smaller image size */
-    height: 120px;
-    object-fit: cover;
-    display: block;
-    margin: 10px auto; /* Center image */
-    border-radius: 5px;
-    border: 1px solid #ddd;
-  }
-  
-  /* Button Group */
-  .button-group {
-    margin-top: 15px;
+    color: #2e7d32;
+}
+
+/* Webcam View */
+/* Webcam View */
+.webcam-container {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: row; /* Change direction to row for side-by-side layout */
+    justify-content: center; /* Center the content */
+    align-items: center; /* Align items vertically */
+    margin-bottom: 15px;
+  }
+  
+  .webcam-container .webcam {
+    width: 250px;
+    height: 180px;
+    border: 2px solid #81c784;
+    border-radius: 8px;
+    margin-right: 10px; /* Space between the camera and the captured image */
+  }
+  
+  .captured-image {
+    width: 120px;  /* Adjust the width of the captured image */
+    height: 80px;  /* Adjust the height of the captured image to form a rectangle */
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+  
+  
+  /* Other styles remain unchanged */
+  
+
+/* Button Group */
+.button-group {
+    display: flex;
     justify-content: space-between;
     gap: 10px;
-  }
-  
-  .button-group button {
+    margin-bottom: 15px;
+}
+
+.button-group button {
     flex: 1;
     padding: 8px;
     font-size: 14px;
@@ -78,25 +93,65 @@
     border-radius: 5px;
     cursor: pointer;
     color: white;
-  }
-  
-  .button-group button:nth-child(1) {
+}
+
+.button-group button:nth-child(1) {
     background-color: #4CAF50;
-  }
-  
-  .button-group button:nth-child(2) {
+}
+
+.button-group button:nth-child(2) {
     background-color: #FF9800;
-  }
-  
-  .button-group button:nth-child(3) {
+}
+
+.button-group button:nth-child(3) {
     background-color: #2196F3;
-  }
-  
-  .button-group button:nth-child(4) {
+}
+
+.button-group button:nth-child(4) {
     background-color: #F44336;
-  }
-  
-  .button-group button:hover {
+}
+
+.button-group button:hover {
     opacity: 0.9;
-  }
-  
+}
+
+/* Results Box */
+.result-box {
+    margin-top: 10px;
+    padding: 10px;
+    background: #ffffff;
+    border: 1px solid #c8e6c9;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.result-box p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.result-box strong {
+    color: #2e7d32;
+}
+
+/* Content Wrapper with Scrollable Feature */
+.plant-search-content {
+    max-height: 300px; /* Adjust the height as needed */
+    overflow-y: auto; /* Enables vertical scrolling */
+    padding-right: 5px; /* Space for scrollbar */
+}
+
+/* Optional: Scrollbar Styling */
+.plant-search-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.plant-search-content::-webkit-scrollbar-thumb {
+    background-color: #81c784; /* Green scrollbar thumb */
+    border-radius: 4px;
+}
+
+.plant-search-content::-webkit-scrollbar-thumb:hover {
+    background-color: #66bb6a; /* Darker green on hover */
+}

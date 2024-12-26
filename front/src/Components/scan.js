@@ -1,19 +1,16 @@
 import React, { useState, useRef } from 'react';
 import Webcam from 'react-webcam';
 import axios from 'axios';
-import { FaLeaf } from 'react-icons/fa'; // Icon for the button
-import "./plantsearch.css";
+import './plantsearch.css';
+import { FaLeaf } from 'react-icons/fa';
 
 function PlantSearch() {
   const [plantData, setPlantData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [imageSrc, setImageSrc] = useState(null);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
-  const [isBoxOpen, setIsBoxOpen] = useState(false); // Toggle box visibility
   const webcamRef = useRef(null);
   const apiKey = '7G4RoSFqFmdnA3mBqJGnAtlmDvigOCSpvk4Eea63Z22qIlXVHF';
-
-  const toggleBox = () => setIsBoxOpen(!isBoxOpen);
 
   const capture = () => {
     const imageSrc = webcamRef.current.getScreenshot();
@@ -40,20 +37,21 @@ function PlantSearch() {
         {
           headers: {
             'Content-Type': 'multipart/form-data',
-            'Api-Key': apiKey
-          }
+            'Api-Key': apiKey,
+          },
         }
       );
 
       const suggestion = response.data.suggestions[0];
+      console.log(suggestion)
       if (suggestion.probability > 0.1) {
         setPlantData(suggestion);
       } else {
         setPlantData(null);
       }
-      setLoading(false);
     } catch (error) {
       console.error('Error identifying plant:', error);
+    } finally {
       setLoading(false);
     }
   };
@@ -70,55 +68,39 @@ function PlantSearch() {
   };
 
   return (
-    <div className="plant-search-container">
-      {/* Icon Button */}
-      <button className="plant-icon-btn" onClick={toggleBox}>
-        <FaLeaf size={30} />
+    <>
+      <button className="plant-icon-btn" onClick={() => setIsCameraOpen(!isCameraOpen)}>
+        <FaLeaf size={24} />
       </button>
 
-      {/* Popup Box */}
-      {isBoxOpen && (
+      {isCameraOpen && (
         <div className="plant-search-box">
           <h2>Plant Search</h2>
-          {loading && <p>Identifying plant...</p>}
-
-          {plantData ? (
-            <div className="plant-details">
-              <p><strong>Common Name:</strong> {plantData.plant_name}</p>
-              <p><strong>Scientific Name:</strong> {plantData.scientific_name}</p>
-              <p><strong>Family:</strong> {plantData.family}</p>
-              <p><strong>Accuracy:</strong> {(plantData.probability * 100).toFixed(2)}%</p>
-            </div>
-          ) : (
-            imageSrc && <p>No plant found.</p>
-          )}
-
-          {isCameraOpen && (
-            <Webcam
-              audio={false}
-              ref={webcamRef}
-              screenshotFormat="image/jpeg"
-              width={280}
-            />
-          )}
-
-          <div className="button-group">
-            <button onClick={() => setIsCameraOpen(true)}>Open Camera</button>
-            <button onClick={capture} disabled={!isCameraOpen}>Capture Image</button>
-            <button onClick={handleSubmit}>Identify Plant</button>
-            <button onClick={toggleBox}>Close</button>
+          <div className="webcam-container">
+            <Webcam ref={webcamRef} audio={false} screenshotFormat="image/jpeg" className="webcam" />
+            {imageSrc && <img src={imageSrc} alt="Captured plant" className="captured-image" />}
           </div>
 
-          {imageSrc && (
-            <img
-              src={imageSrc}
-              alt="Captured plant"
-              className="captured-image"
-            />
+          <div className="button-group">
+            <button onClick={capture}>Capture</button>
+            <button onClick={handleSubmit}>Identify</button>
+          </div>
+
+          {loading && <p>Identifying plant...</p>}
+          {plantData && (
+            <div className="result-box">
+              <p><strong>Common Name:</strong> {plantData.plant_name}</p>
+              <p><strong>Accuracy:</strong> {(plantData.probability * 100).toFixed(2)}%</p>
+            </div>
+          )}
+          {!plantData && (
+            <div className="result-box">
+                <p>No plant identified.</p>
+                </div>
           )}
         </div>
       )}
-    </div>
+    </>
   );
 }
 
