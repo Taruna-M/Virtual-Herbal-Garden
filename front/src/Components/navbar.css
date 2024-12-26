@@ -1,37 +1,82 @@
 /* Styling for the navbar */
 .navbar {
-    position: fixed;
-    top: 0;
-    width: 80%;
-    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
-    color: white;
-    z-index: 10; /* Ensure it's above the Unity scene */
-    padding: 15px 0;
-    text-align:left;
-  }
-  
-  .nav-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content:left;
-  }
-  
-  .nav-item {
-    margin: 0 20px;
-  }
-  
-  .nav-item a {
-    color: white;
-    text-decoration: none;
-    font-size: 18px;
-    padding: 10px 15px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .nav-item a:hover {
-    background-color: rgba(255, 255, 255, 0.2); /* Highlight on hover */
-    border-radius: 5px;
-  }
-  
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+  color: white;
+  z-index: 10; /* Ensure it's above the Unity scene */
+  padding: 15px 0;
+  display: flex; /* Use flexbox for layout */
+  justify-content: space-between; /* Space between items */
+  align-items: center; /* Center items vertically */
+}
+
+.nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.nav-item {
+  margin: 0 20px;
+}
+
+.nav-item a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  padding: 10px 15px;
+  transition: background-color 0.3s ease;
+}
+
+.nav-item a:hover {
+  background-color: rgba(255, 255, 255, 0.2); /* Highlight on hover */
+  border-radius: 5px;
+}
+
+/* Styling for the search engine */
+.search-engine {
+  position: relative;
+  margin-left: 15%;
+  flex: 1; /* Add this to make it take up the remaining space */
+}
+
+.search-engine input {
+  width: 80%; /* Full width for the input */
+  padding: 10px; /* Padding for the input */
+  border: 1px solid #ccc; /* Light border */
+  border-radius: 4px; /* Rounded input corners */
+}
+
+.search-results {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  right: 0;
+  max-width: 85%; /* Initial width */
+  background-color: black;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+  resize: both; /* Allow horizontal resizing */
+  overflow-x: auto; /* Add horizontal scrollbar if content exceeds width */
+}
+
+.search-results ul {
+  list-style-type: none; /* Remove default list style */
+  padding: 0; /* Remove padding */
+  margin: 0; /* Remove margin */
+}
+
+.search-results li {
+  padding: 10px; /* Padding for each result */
+  border-bottom: 1px solid #ccc; /* Bottom border for separation */
+}
+
+.search-results li:last-child {
+  border-bottom: none; /* Remove border for last item */
+}
