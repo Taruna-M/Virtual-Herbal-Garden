@@ -3,7 +3,7 @@ import LoginPage from "./Components/LoginPage";
 import UnityComponent from "./Components/UnityComponent";
 import Navbar from "./Components/Navbar";
 import Gemini from "./Components/gemini";
-
+import PlantSearch from "./Components/scan";
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [unityLoaded, setUnityLoaded] = useState(false);
@@ -31,6 +31,7 @@ function App() {
           {unityLoaded && (
             <>
               <Navbar />
+              <PlantSearch/>
               <Gemini />
             </>
           )}

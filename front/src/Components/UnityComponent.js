@@ -3,10 +3,10 @@ import { Unity, useUnityContext } from "react-unity-webgl";
 
 const UnityComponent = ({ onUnityLoaded }) => {
   const { unityProvider, loadingProgression, isLoaded, sendMessage } = useUnityContext({
-    loaderUrl: "/garden3/Build/garden4.loader.js",
-    dataUrl: "/garden3/Build/garden4.data",
-    frameworkUrl: "/garden3/Build/garden4.framework.js",
-    codeUrl: "/garden3/Build/garden4.wasm",
+    loaderUrl: "/garden4/Build/garden4.loader.js",
+    dataUrl: "/garden4/Build/garden4.data",
+    frameworkUrl: "/garden4/Build/garden4.framework.js",
+    codeUrl: "/garden4/Build/garden4.wasm",
   });
 
   // Store the Unity instance globally and trigger the callback when loaded
@@ -23,7 +23,7 @@ const UnityComponent = ({ onUnityLoaded }) => {
   }, [isLoaded, onUnityLoaded]);
 
   return (
-    <div className="" style={{ width: "100%", height: "100vh" }}>
+    <div className="" style={{ width: "100%", height: "100vh" ,zIndex:"-1000"}}>
       {!isLoaded && <p>Loading Application... {Math.round(loadingProgression * 100)}%</p>}
       <Unity unityProvider={unityProvider} style={{ width: "100%", height: "100vh", visibility: isLoaded ? "visible" : "hidden" }} />
     </div>
