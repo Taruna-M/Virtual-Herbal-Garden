@@ -8,7 +8,7 @@ const app = express(); // Create a new Express app instance
 app.use(express.static(path.join(__dirname, '../front/public')));
 
 // Serve the Unity WebGL build files
-app.use('/garden4', express.static(path.join(__dirname, '../front/public/garden4')));
+app.use('/garden8', express.static(path.join(__dirname, '../front/public/garden8')));
 
 // Catch-all route to serve React front-end
 app.get('*', (req, res) => {

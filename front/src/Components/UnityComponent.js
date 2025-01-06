@@ -1,22 +1,12 @@
 import React, { useEffect } from "react";
-import { Unity, useUnityContext } from "react-unity-webgl";
+import { Unity } from "react-unity-webgl";
+import { useUnity } from "../Context/UnityProvider";
 
 const UnityComponent = ({ onUnityLoaded }) => {
-  const { unityProvider, loadingProgression, isLoaded, sendMessage } = useUnityContext({
-    loaderUrl: "/garden4/Build/garden4.loader.js",
-    dataUrl: "/garden4/Build/garden4.data",
-    frameworkUrl: "/garden4/Build/garden4.framework.js",
-    codeUrl: "/garden4/Build/garden4.wasm",
-  });
-
+  const { unityProvider, loadingProgression, isLoaded } = useUnity();
   // Store the Unity instance globally and trigger the callback when loaded
   useEffect(() => {
     if (isLoaded) {
-      // Set the Unity instance globally when loaded
-      const unityInstance = window.unityInstance;
-      if (unityInstance) {
-        window.unityInstance = unityInstance;
-      }
       // Call the callback to notify that Unity has loaded
       onUnityLoaded();
     }
