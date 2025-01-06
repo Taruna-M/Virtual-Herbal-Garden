@@ -2,10 +2,10 @@
 import { useUnityContext } from "react-unity-webgl";
 const useSharedUnityContext = () => {
     return useUnityContext({
-    loaderUrl: "/garden8/Build/garden8.loader.js",
-    dataUrl: "/garden8/Build/garden8.data",
-    frameworkUrl: "/garden8/Build/garden8.framework.js",
-    codeUrl: "/garden8/Build/garden8.wasm",
+    loaderUrl: "/garden5/Build/garden5.loader.js",
+    dataUrl: "/garden5/Build/garden5.data",
+    frameworkUrl: "/garden5/Build/garden5.framework.js",
+    codeUrl: "/garden5/Build/garden5.wasm",
     })
 };
 
