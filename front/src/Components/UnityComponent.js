@@ -3,10 +3,10 @@ import { Unity, useUnityContext } from "react-unity-webgl";
 
 const UnityComponent = ({ onUnityLoaded }) => {
   const { unityProvider, loadingProgression, isLoaded, sendMessage } = useUnityContext({
-    loaderUrl: "/garden4/Build/garden4.loader.js",
-    dataUrl: "/garden4/Build/garden4.data",
-    frameworkUrl: "/garden4/Build/garden4.framework.js",
-    codeUrl: "/garden4/Build/garden4.wasm",
+    loaderUrl: "/garden5/Build/garden5.loader.js",
+    dataUrl: "/garden5/Build/garden5.data",
+    frameworkUrl: "/garden5/Build/garden5.framework.js",
+    codeUrl: "/garden5/Build/garden5.wasm",
   });
 
   // Store the Unity instance globally and trigger the callback when loaded
