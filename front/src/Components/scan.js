@@ -17,6 +17,12 @@ function PlantSearch() {
     setImageSrc(imageSrc);
   };
 
+  const clearCapture = () => {
+    setImageSrc(null); 
+     // Clears the captured image
+     setPlantData(null)
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!imageSrc) {
@@ -43,7 +49,7 @@ function PlantSearch() {
       );
 
       const suggestion = response.data.suggestions[0];
-      console.log(suggestion)
+      console.log(suggestion);
       if (suggestion.probability > 0.1) {
         setPlantData(suggestion);
       } else {
@@ -84,6 +90,7 @@ function PlantSearch() {
           <div className="button-group">
             <button onClick={capture}>Capture</button>
             <button onClick={handleSubmit}>Identify</button>
+            <button onClick={clearCapture} className="clear-btn">Clear</button>  {/* Clear button */}
           </div>
 
           {loading && <p>Identifying plant...</p>}
@@ -93,10 +100,10 @@ function PlantSearch() {
               <p><strong>Accuracy:</strong> {(plantData.probability * 100).toFixed(2)}%</p>
             </div>
           )}
-          {!plantData && (
+          {!plantData && imageSrc && (
             <div className="result-box">
-                <p>No plant identified.</p>
-                </div>
+              <p>No plant identified.</p>
+            </div>
           )}
         </div>
       )}
