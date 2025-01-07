@@ -5,6 +5,7 @@ import Navbar from "./Components/Navbar";
 import Gemini from "./Components/gemini";
 import PlantSearch from "./Components/scan";
 import { UnityProvider } from "./Context/UnityProvider";
+import Notes from "./Components/Notes"
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [unityLoaded, setUnityLoaded] = useState(false);

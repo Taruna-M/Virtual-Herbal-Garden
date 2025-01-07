@@ -1,6 +1,6 @@
 
 .gemini {
-    z-index: 1000;
+    z-index: 3000;
 }
 
 .gemini-icon {
@@ -47,7 +47,7 @@
     right: 20px; /* Keep it aligned with the icon */
     padding: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    z-index: 99; /* Ensure chatbox is above other content, but below the icon */
+    z-index: 3000; /* Ensure chatbox is above other content, but below the icon */
     display: none; /* Initially hide the chatbox */
 }
 
@@ -187,6 +187,7 @@
     display: flex; /* Center icon */
     justify-content: center; /* Center icon */
     align-items: center; /* Center icon */
+    z-index: 3000 !important;
 }
 
 .send-button img {

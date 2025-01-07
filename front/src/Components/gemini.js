@@ -124,7 +124,7 @@ const GeminiComponent = () => {
                         onFocus={() => setUnityInputStatus('disable')}
                         onBlur={() => setUnityInputStatus('enable')}
                     />
-                    <button className="send-button" onClick={handleSubmit}>
+                    <button className="send-button" onClick={handleSubmit} style={{zIndex:"2000"}}>
                         <img 
                             src="https://www.shutterstock.com/image-vector/green-fill-message-send-icon-260nw-2396311513.jpg" 
                             alt="Send" 
