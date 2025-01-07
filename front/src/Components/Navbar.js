@@ -1,11 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './navbar.css'; // Add the styling for the navbar
+
+//unity to react communication
+import useHideBtn  from '../Hooks/useHideBtn';
+
+//react to unity communication
+import useHandleUnityInput from '../Hooks/useHandleUnityInput';
 
 const Navbar = () => {
   const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredData, setFilteredData] = useState([]);
   const [showResults, setShowResults] = useState(false); // Add a state to track whether to show results or not
+  const navbarRef = useRef(null);
+  const [unityInputStatus, setUnityInputStatus] = useState('enable');
+
+  useHideBtn(navbarRef);
+  useHandleUnityInput(unityInputStatus);
 
   useEffect(() => {
     // Fetch the JSON data
@@ -32,10 +43,12 @@ const Navbar = () => {
   }, [searchQuery, data]);
 
   const handleFocus = () => {
+    setUnityInputStatus('disable');
     setShowResults(true); // Show the results on focus
   };
 
   const handleBlur = () => {
+    setUnityInputStatus('enable');
     setShowResults(false); // Hide the results on blur
   };
 
@@ -55,7 +68,7 @@ const Navbar = () => {
   
   
   return (
-    <nav className="navbar">
+    <nav className="navbar" ref={navbarRef}>
       <ul className="nav-list">
         <li className="nav-item"><a href="#home">About</a></li>
         <li className="nav-item"><a href="#about">Discussion Forum</a></li>

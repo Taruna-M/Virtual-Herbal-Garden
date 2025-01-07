@@ -4,7 +4,7 @@ import UnityComponent from "./Components/UnityComponent";
 import Navbar from "./Components/Navbar";
 import Gemini from "./Components/gemini";
 import PlantSearch from "./Components/scan";
-import Notes from './Components/Notes';
+import { UnityProvider } from "./Context/UnityProvider";
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [unityLoaded, setUnityLoaded] = useState(false);
@@ -20,6 +20,7 @@ function App() {
   };
 
   return (
+    <UnityProvider>
     <div className="App">
       {/* Show login page if not logged in, otherwise show Unity and Navbar/Gemini */}
       {!loggedIn ? (
@@ -31,7 +32,7 @@ function App() {
           {/* Show Navbar and Gemini only after Unity has loaded */}
           {unityLoaded && (
             <>
-              <Navbar />
+              <Navbar unityLoaded={unityLoaded} />
               <PlantSearch/>
               <Gemini />
               <Notes />
@@ -40,6 +41,7 @@ function App() {
         </>
       )}
     </div>
+    </UnityProvider>
   );
 }
 

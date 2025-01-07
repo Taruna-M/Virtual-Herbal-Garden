@@ -4,14 +4,19 @@ import axios from 'axios';
 import './plantsearch.css';
 import { FaLeaf } from 'react-icons/fa';
 
+//unity to react communication
+import useHideBtn  from '../Hooks/useHideBtn'
+
 function PlantSearch() {
   const [plantData, setPlantData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [imageSrc, setImageSrc] = useState(null);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const webcamRef = useRef(null);
-  const apiKey = '7G4RoSFqFmdnA3mBqJGnAtlmDvigOCSpvk4Eea63Z22qIlXVHF';
+  const herbiLensIcon = useRef(null);
+  const apiKey = process.env.PLANT_API_KEY;
 
+  useHideBtn(herbiLensIcon);
   const capture = () => {
     const imageSrc = webcamRef.current.getScreenshot();
     setImageSrc(imageSrc);
@@ -69,7 +74,7 @@ function PlantSearch() {
 
   return (
     <>
-      <button className="plant-icon-btn" onClick={() => setIsCameraOpen(!isCameraOpen)}>
+      <button className="plant-icon-btn" onClick={() => setIsCameraOpen(!isCameraOpen)} ref={herbiLensIcon}>
         <FaLeaf size={24} />
       </button>
 
