@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Note = require('../models/Note');
+const connectDB=require('../models/Note')
 
 // Get all notes
 router.get('/', async (req, res) => {

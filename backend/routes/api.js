@@ -1,7 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 const mongoose = require('mongoose');
-const Note = require('./models/Note'); // Assuming Note model is in the models folder
+const Note = require('../models/Note'); // Assuming Note model is in the models folder
 const router = express.Router();
 
 const geminiApiKey = process.env.GEMINI_API_KEY;

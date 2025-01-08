@@ -2,7 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const app = express(); // Create a new Express app instance
+const app = express(); // Create a new Express app instance // Load environment variables
+require('./config/db'); // Connect to MongoDB
 
 // Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, '../front/public')));
