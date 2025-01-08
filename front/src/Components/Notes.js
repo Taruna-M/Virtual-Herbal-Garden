@@ -22,28 +22,12 @@ const Notes = () => {
   
   useHandleUnityInput(unityInputStatus);
 
-  // Update unity input status when notes window opens/closes
-  useEffect(() => {
-    setUnityInputStatus(isOpen ? 'disable' : 'enable');
-  }, [isOpen]);
 
-  // Update unity input status when starting to drag or resize
+  // Simplified input handling logic
   useEffect(() => {
-    if (isDragging || isResizing) {
-      setUnityInputStatus('disable');
-    } else {
-      setUnityInputStatus(isOpen ? 'disable' : 'enable');
-    }
-  }, [isDragging, isResizing, isOpen]);
-
-  // Update unity input status when interacting with forms
-  useEffect(() => {
-    if (isAddingNote || isViewingNote) {
-      setUnityInputStatus('disable');
-    } else {
-      setUnityInputStatus(isOpen ? 'disable' : 'enable');
-    }
-  }, [isAddingNote, isViewingNote, isOpen]);
+    const shouldDisableInput = isOpen || isDragging || isResizing || isAddingNote || isViewingNote;
+    setUnityInputStatus(shouldDisableInput ? 'disable' : 'enable');
+  }, [isOpen, isDragging, isResizing, isAddingNote, isViewingNote]);
 
   const [newNote, setNewNote] = useState({ 
     title: "", 
@@ -94,7 +78,7 @@ const Notes = () => {
     setIsViewingNote(false);
     setSelectedNote(null);
     setSize({ width: 650, height: 450 });
-    setUnityInputStatus('enable');  // Enable Unity input when closing
+    setUnityInputStatus('enable');
   }, []);
 
   useEffect(() => {
@@ -238,9 +222,16 @@ const Notes = () => {
   }, [isOpen, selectedNote, isAddingNote, handleDelete]);
 
   const handleAddNote = useCallback(() => {
-    if (newNote.title.trim() && newNote.content.trim()) {
+    if (newNote.title.trim() || newNote.content.trim()) {
       const now = new Date();
-      const formattedDate = `${now.toISOString().split('T')[0]} ${now.toLocaleTimeString().slice(0, 5)}`;
+      const formattedDate = now.toLocaleString("en-US", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      });
       
       setNotes(prevNotes => [...prevNotes, {
         ...newNote,
@@ -258,9 +249,8 @@ const Notes = () => {
         title2: "",
         environment: ""
       });
-      setIsAddingNote(false);
-      setIsOpen(true);
     }
+    setIsAddingNote(false);
   }, [newNote]);
   
   useEffect(() => {
@@ -279,14 +269,16 @@ const Notes = () => {
     setIsViewingNote(true);
   };
   
+  // Update note input handlers
   const handleNoteChange = (field, value) => {
-    if (selectedNote !== null) {
+    if (isAddingNote) {
+      setNewNote(prev => ({ ...prev, [field]: value }));
+    } else if (selectedNote !== null) {
       const updatedNotes = notes.map((note, index) => 
         index === selectedNote.index 
           ? { ...note, [field]: value }
           : note
       );
-      
       setNotes(updatedNotes);
       setSelectedNote(prev => ({
         ...prev,
@@ -312,30 +304,27 @@ const Notes = () => {
     <div className="note-form">
       <div className="note-form-container">
         <div className="note-form-header">
-          <button
-            onClick={() => setIsAddingNote(false)}
+          <button 
+            onClick={() => {
+              handleAddNote(); // Call handleAddNote when clicking back
+            }} 
             className="back-button"
           >
             &lt; back
           </button>
           <div className="note-date">
-            {new Date().toLocaleString("en-US", {
-              year: "numeric",
-              month: "2-digit",
-              day: "2-digit",
-              hour: "2-digit",
-              minute: "2-digit",
-              hour12: true,
-            })}
+            {new Date().toLocaleString()}
           </div>
         </div>
         <input
           placeholder="Title"
+          value={newNote.title}
           onChange={(e) => handleNoteChange("title", e.target.value)}
           className="note-title-input"
         />
         <textarea
           placeholder="Write your note here..."
+          value={newNote.content}
           onChange={(e) => handleNoteChange("content", e.target.value)}
           className="note-content-textarea"
         />

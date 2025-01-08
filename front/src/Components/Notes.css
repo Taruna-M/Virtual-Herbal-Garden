@@ -219,7 +219,7 @@
     font-family: inherit;
 }
 
-/* Notes grid styles */
+/* Notes grid styles - Added to prevent grid cell stretching */
 .notes-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -227,12 +227,13 @@
     overflow-y: auto;
     padding: 0 0 24px 0;
     height: calc(100% - 80px);
+    align-items: start; /* Prevent stretching */
 }
 
 /* Note card styles */
 .note-card {
     margin-top: 10px;
-    padding: 16px;
+    padding: 24px;
     background-color: rgba(255, 255, 255, 0.9);
     border-radius: 10px;
     border: 1.5px solid #2ea043;
@@ -240,7 +241,23 @@
     cursor: pointer;
     backdrop-filter: blur(5px);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    
+    /* Fixed dimensions */
+    width: calc(100% - 8px);
+    min-width: calc(100% - 8px);
+    max-width: calc(100% - 8px);
+    height: 160px;
+    min-height: 160px;
+    max-height: 160px;
+    
+    /* Ensure content stays within bounds */
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    flex-grow: 0;
+    box-sizing: border-box;
 }
+
 
 .note-card:hover {
     transform: translateY(-2px);
@@ -286,19 +303,33 @@
     transform: none; /* Remove scaling or animations */
 }
 
+/* Content styles to ensure proper containment */
 .note-card-date {
     color: #666;
     font-size: 12px;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
+    flex-shrink: 0;
 }
 
 .note-card-title {
-    margin: 0 0 8px 0;
-    font-size: 18px;
+    margin: 0 0 12px 0;
+    font-size: 20px;
     color: #2ea043;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 0;
 }
 
 .note-card-content {
     margin: 0;
     color: #666;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    line-height: 1.5;
+    font-size: 14px;
+    flex: 1;
+    min-height: 0; /* Allows proper overflow handling */
 }

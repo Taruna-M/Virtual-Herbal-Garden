@@ -1,40 +1,9 @@
 const express = require('express');
-const axios = require('axios');
-const mongoose = require('mongoose');
-const Note = require('./models/Note'); // Assuming Note model is in the models folder
 const router = express.Router();
-
-const geminiApiKey = process.env.GEMINI_API_KEY;
-
-// Existing Gemini API route
-router.post('/generate-content', async (req, res) => {
-  try {
-    const response = await axios.post(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${geminiApiKey}`,
-      {
-        contents: [
-          {
-            role: "user",
-            parts: [{ text: req.body.text }],
-          },
-        ],
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-
-    res.json(response.data);
-  } catch (error) {
-    console.error('Error fetching from Gemini API:', error);
-    res.status(500).json({ error: 'An error occurred while processing your request.' });
-  }
-});
+const Note = require('../models/Note');
 
 // Get all notes
-router.get('/notes', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const notes = await Note.find();
     res.json(notes);
@@ -44,12 +13,12 @@ router.get('/notes', async (req, res) => {
 });
 
 // Get a single note by ID
-router.get('/notes/:id', getNote, (req, res) => {
+router.get('/:id', getNote, (req, res) => {
   res.json(res.note);
 });
 
 // Create a new note
-router.post('/notes', async (req, res) => {
+router.post('/', async (req, res) => {
   const note = new Note({
     title: req.body.title,
     content: req.body.content,
@@ -68,7 +37,7 @@ router.post('/notes', async (req, res) => {
 });
 
 // Update a note
-router.patch('/notes/:id', getNote, async (req, res) => {
+router.patch('/:id', getNote, async (req, res) => {
   if (req.body.title != null) {
     res.note.title = req.body.title;
   }
@@ -97,7 +66,7 @@ router.patch('/notes/:id', getNote, async (req, res) => {
 });
 
 // Delete a note
-router.delete('/notes/:id', getNote, async (req, res) => {
+router.delete('/:id', getNote, async (req, res) => {
   try {
     await res.note.remove();
     res.json({ message: 'Deleted Note' });
