@@ -1,29 +1,28 @@
-// backend/index.js
+//this is the main entry point for backend apis
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const mongoose = require('mongoose');
 const app = express();
 
-// MongoDB Atlas Connection
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('✅ MongoDB Connected Successfully'))
-.catch((err) => {
-  console.error('❌ MongoDB Connection Failed:', err);
-  process.exit(1);
-});
+//imports
+const connectDB = require('./config/connectDB');
+const errorHandler = require('./middleware/errorHandler');
+
+//connect DB
+connectDB();
 
 // Middleware
-app.use(cors());
+app.use( cors({ origin: "http://localhost:3000" })); //frontend origin 
 app.use(express.json());
 
-// Routes
-const noteRoutes = require('./routes/notes');
-app.use('/api/notes', noteRoutes);
+// Route Imports
+const geminiRoute = require('./routes/geminiRoute');
+const noteRoute = require('./routes/notesRoute');
+
+//routes
+app.use('/api', geminiRoute);
+app.use('/api/notes', noteRoute);
 
 // Static file serving
 app.use(express.static(path.join(__dirname, '../front/public')));
@@ -33,6 +32,9 @@ app.use('/garden5', express.static(path.join(__dirname, '../front/public/garden5
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../front/public', 'index.html'));
 });
+
+//error handler
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

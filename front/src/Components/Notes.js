@@ -51,8 +51,8 @@ const Notes = () => {
     const fetchNotes = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get('/api/notes');
-        setNotes(Array.isArray(response.data) ? response.data : []);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/notes`);
+        setNotes(Array.isArray(response.data.payload) ? response.data.payload : []);
       } catch (error) {
         console.error('Error fetching notes:', error);
         setError(error.message);
@@ -206,7 +206,7 @@ const Notes = () => {
         throw new Error('Invalid note data');
       }
 
-      const response = await axios.delete(`/api/notes/${noteToDelete._id}`);
+      const response = await axios.delete(`${process.env.REACT_APP_API_URL}/api/notes/${noteToDelete._id}`);
       if (response.status === 200) {
         setNotes(prevNotes => prevNotes.filter((_, i) => i !== index));
       } else {
@@ -256,8 +256,9 @@ const Notes = () => {
       };
 
       try {
-        const response = await axios.post('/api/notes', noteData);
-        setNotes(prevNotes => Array.isArray(prevNotes) ? [...prevNotes, response.data] : [response.data]);
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/notes`, noteData);
+        console.log(response)
+        setNotes(prevNotes => Array.isArray(prevNotes) ? [...prevNotes, response.data.payload] : [response.data.payload]);
         setNewNote({
           title: "",
           content: "",
@@ -309,11 +310,11 @@ const Notes = () => {
 
       try {
         // Then update the backend
-        const response = await axios.patch(`/api/notes/${selectedNote._id}`, {
+        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/api/notes/${selectedNote._id}`, {
           [field]: value
         });
         
-        if (!response.data) {
+        if (!response.data.payload) {
           throw new Error('Failed to update note');
         }
       } catch (error) {
