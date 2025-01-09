@@ -1,8 +1,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { X, Plus, Trash2 } from "lucide-react";
 import "./Notes.css";
-
-//react to unity communication
+import axios from 'axios';
 import useHandleUnityInput from '../Hooks/useHandleUnityInput';
 
 const Notes = () => {
@@ -17,11 +16,21 @@ const Notes = () => {
   const [size, setSize] = useState({ width: 650, height: 450 });
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [resizeStart, setResizeStart] = useState({ x: 0, y: 0, width: 0, height: 0 });
-  // ... (previous state declarations remain the same)
   const [unityInputStatus, setUnityInputStatus] = useState('enable');
+  const [notes, setNotes] = useState([]); // Initialize as empty array
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   
-  useHandleUnityInput(unityInputStatus);
+  const [newNote, setNewNote] = useState({
+    title: "",
+    content: "",
+    date: "",
+    back: "Back",
+    title2: "Title",
+    environment: "Content"
+  });
 
+  useHandleUnityInput(unityInputStatus);
 
   // Simplified input handling logic
   useEffect(() => {
@@ -29,49 +38,30 @@ const Notes = () => {
     setUnityInputStatus(shouldDisableInput ? 'disable' : 'enable');
   }, [isOpen, isDragging, isResizing, isAddingNote, isViewingNote]);
 
-  const [newNote, setNewNote] = useState({ 
-    title: "", 
-    content: "", 
-    date: "", 
-    back: "",
-    title2: "",
-    environment: ""
-  });
-  const [notes, setNotes] = useState([
-    {
-      title: "Ginkgo",
-      content: "Ginkgo Biloba is an ancient, deciduous tree that grows up to 100 feet tall with distinctive fan-shaped leaves.",
-      date: "01/03/2024, 12:00 PM",
-      back: "Back",
-      title2: "Title",
-      environment: "Content"
-    },
-    {
-      title: "Tulsi",
-      content: "Tulsi (Ocimum sanctum) is an aromatic, shrub-like herb that grows up to 2 feet tall with purple-pink flowers.",
-      date: "01/03/2024, 03:45 PM",
-      back: "Back",
-      title2: "Title",
-      environment: "Content"
-    },
-    {
-      title: "Ginkgo",
-      content: "Ginkgo Biloba is an ancient, deciduous tree that grows up to 100 feet tall with distinctive fan-shaped leaves.",
-      date: "01/03/2024, 12:00 PM",
-      back: "Back",
-      title2: "Title",
-      environment: "Content"
-    },
-    {
-      title: "Tulsi",
-      content: "Tulsi (Ocimum sanctum) is an aromatic, shrub-like herb that grows up to 2 feet tall with purple-pink flowers.",
-      date: "01/03/2024, 03:45 PM",
-      back: "Back",
-      title2: "Title",
-      environment: "Content"
-    }
-  ]);
+  // Fetch notes from backend when component mounts
+  useEffect(() => {
+    const fetchNotes = async () => {
+      setIsLoading(true);
+      try {
+        const response = await axios.get('/api/notes');
+        // Ensure we always set an array, even if the response is empty
+        setNotes(Array.isArray(response.data) ? response.data : []);
+      } catch (error) {
+        console.error('Error fetching notes:', error);
+        setError(error.message);
+        setNotes([]); // Ensure notes is an empty array on error
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
+    fetchNotes();
+  }, []);
+
+
+  
+
+  // All other existing functions remain the same
   const handleClose = useCallback(() => {
     setIsOpen(false);
     setIsAddingNote(false);
@@ -80,6 +70,7 @@ const Notes = () => {
     setSize({ width: 650, height: 450 });
     setUnityInputStatus('enable');
   }, []);
+
 
   useEffect(() => {
     if (isOpen) {
@@ -199,9 +190,27 @@ const Notes = () => {
     };
   }, [isDragging, handleMouseMove, handleMouseUp]);
 
-  const handleDelete = useCallback((index) => {
-    setNotes(prevNotes => prevNotes.filter((_, i) => i !== index));
-  }, []);
+  // In the frontend Notes.js component, update the handleDelete function:
+const handleDelete = useCallback(async (index) => {
+  try {
+    const noteToDelete = notes[index];
+    if (!noteToDelete || !noteToDelete._id) {
+      throw new Error('Invalid note data');
+    }
+
+    const response = await axios.delete(`/api/notes/${noteToDelete._id}`);
+    if (response.status === 200) {
+      setNotes(prevNotes => prevNotes.filter((_, i) => i !== index));
+    } else {
+      throw new Error('Failed to delete note');
+    }
+  } catch (error) {
+    console.error('Error deleting note:', error);
+    // Show error to user - you might want to add a state for error messages
+    setError(error.response?.data?.message || error.message || 'Failed to delete note');
+  }
+}, [notes]);
+
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -221,7 +230,8 @@ const Notes = () => {
     };
   }, [isOpen, selectedNote, isAddingNote, handleDelete]);
 
-  const handleAddNote = useCallback(() => {
+  // Modified handleAddNote to handle errors
+  const handleAddNote = useCallback(async () => {
     if (newNote.title.trim() || newNote.content.trim()) {
       const now = new Date();
       const formattedDate = now.toLocaleString("en-US", {
@@ -232,23 +242,27 @@ const Notes = () => {
         minute: "2-digit",
         hour12: true,
       });
-      
-      setNotes(prevNotes => [...prevNotes, {
+
+      const noteData = {
         ...newNote,
         date: formattedDate,
-        back: "Back",
-        title2: "Title",
-        environment: "Content"
-      }]);
-      
-      setNewNote({ 
-        title: "", 
-        content: "", 
-        date: "", 
-        back: "",
-        title2: "",
-        environment: ""
-      });
+      };
+
+      try {
+        const response = await axios.post('/api/notes', noteData);
+        setNotes(prevNotes => Array.isArray(prevNotes) ? [...prevNotes, response.data] : [response.data]);
+        setNewNote({
+          title: "",
+          content: "",
+          date: "",
+          back: "Back",
+          title2: "Title",
+          environment: "Content"
+        });
+      } catch (error) {
+        console.error('Error adding note:', error);
+        setError(error.message);
+      }
     }
     setIsAddingNote(false);
   }, [newNote]);
@@ -269,21 +283,36 @@ const Notes = () => {
     setIsViewingNote(true);
   };
   
-  // Update note input handlers
-  const handleNoteChange = (field, value) => {
+  // Modified handleNoteChange function to immediately update the UI
+  const handleNoteChange = async (field, value) => {
     if (isAddingNote) {
       setNewNote(prev => ({ ...prev, [field]: value }));
     } else if (selectedNote !== null) {
-      const updatedNotes = notes.map((note, index) => 
-        index === selectedNote.index 
-          ? { ...note, [field]: value }
-          : note
-      );
-      setNotes(updatedNotes);
+      // Update local state immediately for responsive UI
       setSelectedNote(prev => ({
         ...prev,
         [field]: value
       }));
+      
+      setNotes(prevNotes => 
+        prevNotes.map((note, index) =>
+          index === selectedNote.index ? { ...note, [field]: value } : note
+        )
+      );
+
+      try {
+        // Then update the backend
+        const response = await axios.patch(`/api/notes/${selectedNote._id}`, {
+          [field]: value
+        });
+        
+        if (!response.data) {
+          throw new Error('Failed to update note');
+        }
+      } catch (error) {
+        console.error('Error updating note:', error);
+        // Optionally handle the error (e.g., show a notification)
+      }
     }
   };
   
@@ -300,14 +329,13 @@ const Notes = () => {
     }
   };
   
+  // Modified renderAddNoteForm to ensure input changes are captured
   const renderAddNoteForm = () => (
     <div className="note-form">
       <div className="note-form-container">
         <div className="note-form-header">
           <button 
-            onClick={() => {
-              handleAddNote(); // Call handleAddNote when clicking back
-            }} 
+            onClick={handleAddNote}
             className="back-button"
           >
             &lt; back
@@ -321,6 +349,7 @@ const Notes = () => {
           value={newNote.title}
           onChange={(e) => handleNoteChange("title", e.target.value)}
           className="note-title-input"
+          autoFocus
         />
         <textarea
           placeholder="Write your note here..."
@@ -332,6 +361,7 @@ const Notes = () => {
     </div>
   );
   
+  // Modified renderViewNoteForm to ensure input changes are captured
   const renderViewNoteForm = () => (
     <div className="note-form">
       <div className="note-form-container">
@@ -346,16 +376,7 @@ const Notes = () => {
             &lt; back
           </button>
           <div className="note-date">
-            {selectedNote?.date
-              ? new Date(selectedNote.date).toLocaleString("en-US", {
-                  year: "numeric",
-                  month: "2-digit",
-                  day: "2-digit",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  hour12: true,
-                })
-              : ""}
+            {selectedNote?.date || ""}
           </div>
         </div>
         <input
@@ -401,6 +422,7 @@ const Notes = () => {
               height: `${size.height}px`,
             }}
           >
+            {/* Resize handles */}
             <div
               onMouseDown={(e) => handleResizeStart(e, 'e')}
               className={`resize-handle resize-handle-e ${isResizing && resizeDirection === 'e' ? 'is-resizing' : ''}`}
@@ -414,7 +436,7 @@ const Notes = () => {
               className={`resize-handle resize-handle-se ${isResizing && resizeDirection === 'se' ? 'is-resizing' : ''}`}
             />
   
-            <div 
+  <div 
               data-drag-handle="true"
               className={`notes-header ${isDragging ? 'is-dragging' : ''}`}
             >
@@ -444,33 +466,41 @@ const Notes = () => {
 
             {!isAddingNote && !isViewingNote && (
               <div className="notes-grid">
-                {notes.map((note, index) => (
-                  <div
-                    key={index}
-                    onClick={() => handleNoteClick(note, index)}
-                    className="note-card"
-                  >
-                    <div>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDelete(index);
-                        }}
-                        className="delete-button"
-                        aria-label="Delete Note"
-                      >
-                        <Trash2 size={16} color="#dc3545" />
-                      </button>
+                {isLoading ? (
+                  <div className="loading-message">Loading notes...</div>
+                ) : error ? (
+                  <div className="error-message">Error: {error}</div>
+                ) : Array.isArray(notes) && notes.length === 0 ? (
+                  <div className="empty-message">No notes yet. Click + to add one!</div>
+                ) : (
+                  notes.map((note, index) => (
+                    <div
+                      key={index}
+                      onClick={() => handleNoteClick(note, index)}
+                      className="note-card"
+                    >
+                      <div>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDelete(index);
+                          }}
+                          className="delete-button"
+                          aria-label="Delete Note"
+                        >
+                          <Trash2 size={16} color="#dc3545" />
+                        </button>
+                      </div>
+                      <div className="note-card-date">
+                        {note.date}
+                      </div>
+                      <h4 className="note-card-title">{note.title}</h4>
+                      <p className="note-card-content">
+                        {note.content.substring(0, 100)}...
+                      </p>
                     </div>
-                    <div className="note-card-date">
-                      {note.date}
-                    </div>
-                    <h4 className="note-card-title">{note.title}</h4>
-                    <p className="note-card-content">
-                      {note.content.substring(0, 100)}...
-                    </p>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             )}
           </div>

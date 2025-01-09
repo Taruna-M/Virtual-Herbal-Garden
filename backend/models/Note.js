@@ -1,3 +1,4 @@
+// backend/models/Note.js
 const mongoose = require('mongoose');
 
 const NoteSchema = new mongoose.Schema({
@@ -25,6 +26,8 @@ const NoteSchema = new mongoose.Schema({
     type: String,
     default: 'Content',
   },
-}, { timestamps: true });
+}, { 
+  timestamps: true 
+});
 
 module.exports = mongoose.model('Note', NoteSchema);
