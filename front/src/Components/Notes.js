@@ -4,11 +4,15 @@ import "./Notes.css";
 import axios from 'axios';
 import useHandleUnityInput from '../Hooks/useHandleUnityInput';
 
+// Main Notes component for managing user notes with drag, resize, and CRUD operations
 const Notes = () => {
+  // State declarations for controlling UI visibility and modes
   const [isOpen, setIsOpen] = useState(false);
   const [isAddingNote, setIsAddingNote] = useState(false);
   const [isViewingNote, setIsViewingNote] = useState(false);
   const [selectedNote, setSelectedNote] = useState(null);
+
+  // State for window dragging and resizing functionality
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const [resizeDirection, setResizeDirection] = useState(null);
@@ -16,11 +20,14 @@ const Notes = () => {
   const [size, setSize] = useState({ width: 650, height: 450 });
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [resizeStart, setResizeStart] = useState({ x: 0, y: 0, width: 0, height: 0 });
+
+  // States for Unity game engine integration and data management
   const [unityInputStatus, setUnityInputStatus] = useState('enable');
-  const [notes, setNotes] = useState([]); // Initialize as empty array
+  const [notes, setNotes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   
+  // Template for new note creation
   const [newNote, setNewNote] = useState({
     title: "",
     content: "",
@@ -30,26 +37,26 @@ const Notes = () => {
     environment: "Content"
   });
 
+  // Custom hook to manage Unity input state
   useHandleUnityInput(unityInputStatus);
 
-  // Simplified input handling logic
+  // Effect to disable Unity input when notes window is active
   useEffect(() => {
     const shouldDisableInput = isOpen || isDragging || isResizing || isAddingNote || isViewingNote;
     setUnityInputStatus(shouldDisableInput ? 'disable' : 'enable');
   }, [isOpen, isDragging, isResizing, isAddingNote, isViewingNote]);
 
-  // Fetch notes from backend when component mounts
+  // Initial fetch of notes from backend API
   useEffect(() => {
     const fetchNotes = async () => {
       setIsLoading(true);
       try {
         const response = await axios.get('/api/notes');
-        // Ensure we always set an array, even if the response is empty
         setNotes(Array.isArray(response.data) ? response.data : []);
       } catch (error) {
         console.error('Error fetching notes:', error);
         setError(error.message);
-        setNotes([]); // Ensure notes is an empty array on error
+        setNotes([]);
       } finally {
         setIsLoading(false);
       }
@@ -58,10 +65,7 @@ const Notes = () => {
     fetchNotes();
   }, []);
 
-
-  
-
-  // All other existing functions remain the same
+  // Handler to close notes window and reset states
   const handleClose = useCallback(() => {
     setIsOpen(false);
     setIsAddingNote(false);
@@ -71,7 +75,7 @@ const Notes = () => {
     setUnityInputStatus('enable');
   }, []);
 
-
+  // Effect to center the notes window when opened
   useEffect(() => {
     if (isOpen) {
       const defaultWidth = 650;
@@ -86,6 +90,7 @@ const Notes = () => {
     }
   }, [isOpen]);
 
+  // Handler to initiate window resizing
   const handleResizeStart = (e, direction) => {
     e.stopPropagation();
     e.preventDefault();
@@ -99,6 +104,7 @@ const Notes = () => {
     });
   };
 
+  // Handler for active window resizing with bounds checking
   const handleResize = useCallback((e) => {
     if (!isResizing) return;
 
@@ -150,6 +156,7 @@ const Notes = () => {
     };
   }, [isResizing, handleResize, handleResizeEnd]);
 
+  // Handler for window drag initiation
   const handleMouseDown = (e) => {
     if (e.target.closest('[data-drag-handle="true"]')) {
       setIsDragging(true);
@@ -160,6 +167,7 @@ const Notes = () => {
     }
   };
 
+  // Handler for active window dragging with bounds checking
   const handleMouseMove = useCallback((e) => {
     if (!isDragging) return;
 
@@ -190,27 +198,26 @@ const Notes = () => {
     };
   }, [isDragging, handleMouseMove, handleMouseUp]);
 
-  // In the frontend Notes.js component, update the handleDelete function:
-const handleDelete = useCallback(async (index) => {
-  try {
-    const noteToDelete = notes[index];
-    if (!noteToDelete || !noteToDelete._id) {
-      throw new Error('Invalid note data');
-    }
+  // Handler for note deletion with backend sync
+  const handleDelete = useCallback(async (index) => {
+    try {
+      const noteToDelete = notes[index];
+      if (!noteToDelete || !noteToDelete._id) {
+        throw new Error('Invalid note data');
+      }
 
-    const response = await axios.delete(`/api/notes/${noteToDelete._id}`);
-    if (response.status === 200) {
-      setNotes(prevNotes => prevNotes.filter((_, i) => i !== index));
-    } else {
-      throw new Error('Failed to delete note');
+      const response = await axios.delete(`/api/notes/${noteToDelete._id}`);
+      if (response.status === 200) {
+        setNotes(prevNotes => prevNotes.filter((_, i) => i !== index));
+      } else {
+        throw new Error('Failed to delete note');
+      }
+    } catch (error) {
+      console.error('Error deleting note:', error);
+      // Show error to user - you might want to add a state for error messages
+      setError(error.response?.data?.message || error.message || 'Failed to delete note');
     }
-  } catch (error) {
-    console.error('Error deleting note:', error);
-    // Show error to user - you might want to add a state for error messages
-    setError(error.response?.data?.message || error.message || 'Failed to delete note');
-  }
-}, [notes]);
-
+  }, [notes]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -230,7 +237,7 @@ const handleDelete = useCallback(async (index) => {
     };
   }, [isOpen, selectedNote, isAddingNote, handleDelete]);
 
-  // Modified handleAddNote to handle errors
+  // Handler for note creation with backend sync
   const handleAddNote = useCallback(async () => {
     if (newNote.title.trim() || newNote.content.trim()) {
       const now = new Date();
@@ -283,7 +290,7 @@ const handleDelete = useCallback(async (index) => {
     setIsViewingNote(true);
   };
   
-  // Modified handleNoteChange function to immediately update the UI
+  // Handler for note content changes with optimistic UI update and backend sync
   const handleNoteChange = async (field, value) => {
     if (isAddingNote) {
       setNewNote(prev => ({ ...prev, [field]: value }));
@@ -329,7 +336,7 @@ const handleDelete = useCallback(async (index) => {
     }
   };
   
-  // Modified renderAddNoteForm to ensure input changes are captured
+  // Render functions for different note forms
   const renderAddNoteForm = () => (
     <div className="note-form">
       <div className="note-form-container">
@@ -361,7 +368,7 @@ const handleDelete = useCallback(async (index) => {
     </div>
   );
   
-  // Modified renderViewNoteForm to ensure input changes are captured
+  //renderViewNoteForm for viewing and updating the existing note
   const renderViewNoteForm = () => (
     <div className="note-form">
       <div className="note-form-container">
@@ -393,6 +400,7 @@ const handleDelete = useCallback(async (index) => {
     </div>
   );
   
+  // Main component render with conditional content based on state
   return (
     <div className="notes-container">
       <button
