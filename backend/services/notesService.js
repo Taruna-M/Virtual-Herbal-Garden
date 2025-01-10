@@ -26,13 +26,30 @@ exports.createNote = async (body) => {
 
 // Update note
 exports.updateNote = async (id, body) => {
+    // Validate that at least one required field is present
+    if (!body.title && !body.content) {
+        throw new AppError('Title or content is required for update', 400);
+    }
+
+    const note = await Note.findById(id);
+    if (!note) {
+        throw new AppError('Note not found', 404);
+    }
+
+    // Ensure the updated note will still have both required fields
+    const updatedFields = {
+        ...body,
+        title: body.title || note.title,
+        content: body.content || note.content
+    };
+
     const updatedNote = await Note.findByIdAndUpdate(
         id,
-        { $set: body },
+        { $set: updatedFields },
         { new: true, runValidators: true }
     );
-    if (!updatedNote) throw new AppError(`note not found`, 404);
-    return new AppRes(`note updated`, 200, updatedNote);
+
+    return new AppRes('Note updated', 200, updatedNote);
 };
 
 // Delete note

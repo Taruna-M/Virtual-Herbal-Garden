@@ -13,7 +13,7 @@ router.get('/:id', getNoteController);
 router.post('/', createNoteController);
 
 // Update note
-router.patch('/:id', createNoteController);
+router.patch('/:id', updateNoteController);
 
 // Delete note
 router.delete('/:id', deleteNoteController);

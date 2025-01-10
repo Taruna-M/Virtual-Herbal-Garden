@@ -239,7 +239,24 @@ const Notes = () => {
 
   // Handler for note creation with backend sync
   const handleAddNote = useCallback(async () => {
+    // If both fields are empty and user clicks back, just return
+    if (!newNote.title.trim() && !newNote.content.trim()) {
+      setIsAddingNote(false);
+      return;
+    }
+    
+    // Validation only happens if at least one field has content
     if (newNote.title.trim() || newNote.content.trim()) {
+      // Validate required fields
+      if (!newNote.title.trim()) {
+        alert('Title is required to save the note');
+        return;
+      }
+      if (!newNote.content.trim()) {
+        alert('Content is required to save the note');
+        return;
+      }
+      
       const now = new Date();
       const formattedDate = now.toLocaleString("en-US", {
         year: "numeric",
@@ -249,12 +266,12 @@ const Notes = () => {
         minute: "2-digit",
         hour12: true,
       });
-
+      
       const noteData = {
         ...newNote,
         date: formattedDate,
       };
-
+      
       try {
         const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/notes`, noteData);
         setNotes(prevNotes => Array.isArray(prevNotes) ? [...prevNotes, response.data.payload] : [response.data.payload]);
@@ -269,8 +286,10 @@ const Notes = () => {
       } catch (error) {
         console.error('Error adding note:', error);
         setError(error.message);
+        alert('Failed to save note. Please try again.');
       }
     }
+    
     setIsAddingNote(false);
   }, [newNote]);
   
@@ -295,30 +314,41 @@ const Notes = () => {
     if (isAddingNote) {
       setNewNote(prev => ({ ...prev, [field]: value }));
     } else if (selectedNote !== null) {
-      // Update local state immediately for responsive UI
-      setSelectedNote(prev => ({
-        ...prev,
-        [field]: value
-      }));
-      
-      setNotes(prevNotes => 
-        prevNotes.map((note, index) =>
-          index === selectedNote.index ? { ...note, [field]: value } : note
-        )
-      );
-
       try {
-        // Then update the backend
-        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/api/notes/${selectedNote._id}`, {
-          [field]: value
-        });
+        // Only validate if user is actually trying to save changes
+        if (field === 'title' && !value.trim()) {
+          alert('Title is required');
+          return;
+        }
+        if (field === 'content' && !value.trim()) {
+          alert('Content is required');
+          return;
+        }
         
-        if (!response.data.payload) {
+        const response = await axios.patch(
+          `${process.env.REACT_APP_API_URL}/api/notes/${selectedNote._id}`,
+          { [field]: value }
+        );
+        
+        if (response.data.payload) {
+          setSelectedNote(prev => ({
+            ...prev,
+            [field]: value
+          }));
+          
+          setNotes(prevNotes =>
+            prevNotes.map((note, index) =>
+              index === selectedNote.index ? { ...note, [field]: value } : note
+            )
+          );
+        } else {
           throw new Error('Failed to update note');
         }
       } catch (error) {
         console.error('Error updating note:', error);
-        // Optionally handle the error (e.g., show a notification)
+        alert('Failed to update note. Please try again.');
+        setSelectedNote(prev => ({ ...prev }));
+        setNotes(prev => [...prev]);
       }
     }
   };
