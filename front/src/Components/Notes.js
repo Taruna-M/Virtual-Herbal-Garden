@@ -257,7 +257,6 @@ const Notes = () => {
 
       try {
         const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/notes`, noteData);
-        console.log(response)
         setNotes(prevNotes => Array.isArray(prevNotes) ? [...prevNotes, response.data.payload] : [response.data.payload]);
         setNewNote({
           title: "",

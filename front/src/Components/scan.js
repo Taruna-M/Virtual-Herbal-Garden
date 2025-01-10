@@ -54,7 +54,6 @@ function PlantSearch() {
       );
 
       const suggestion = response.data.suggestions[0];
-      console.log(suggestion);
       if (suggestion.probability > 0.1) {
         setPlantData(suggestion);
       } else {
