@@ -2,27 +2,38 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
+const passport = require("passport");
 const path = require('path');
 const app = express();
 
 //imports
 const connectDB = require('./config/connectDB');
 const errorHandler = require('./middleware/errorHandler');
+const { authenticateJWT } = require('./middleware/jwt');
 
 //connect DB
 connectDB();
 
 // Middleware
-app.use( cors({ origin: "http://localhost:3000" })); //frontend origin 
+//origin-> allow specific client urls to access backend server
+//credentials -> allow cookies
+app.use(cors({ origin: ["http://localhost:3000"], credentials: true })); 
+app.use(cookieParser()); //parse the cookies
+app.use(passport.initialize());
 app.use(express.json());
 
 // Route Imports
 const geminiRoute = require('./routes/geminiRoute');
 const noteRoute = require('./routes/notesRoute');
+const loginRoute = require('./routes/loginRoute');
+const accRoute = require('./routes/accRoute');
 
 //routes
 app.use('/api', geminiRoute);
 app.use('/api/notes', noteRoute);
+app.use('/auth', loginRoute);
+app.use('/acc', authenticateJWT, accRoute);
 
 // Static file serving
 app.use(express.static(path.join(__dirname, '../front/public')));

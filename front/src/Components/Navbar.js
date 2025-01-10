@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useLocation } from "react-router-dom";
 import './navbar.css'; // Add the styling for the navbar
 
 //unity to react communication
@@ -8,6 +9,9 @@ import useHideBtn  from '../Hooks/useHideBtn';
 import useHandleUnityInput from '../Hooks/useHandleUnityInput';
 
 const Navbar = () => {
+  const location = useLocation();
+  const user = location.state;
+  
   const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredData, setFilteredData] = useState([]);
@@ -70,10 +74,9 @@ const Navbar = () => {
   return (
     <nav className="navbar" ref={navbarRef}>
       <ul className="nav-list">
-        <li className="nav-item"><a href="#home">About</a></li>
-        <li className="nav-item"><a href="#about">Discussion Forum</a></li>
-        <li className="nav-item"><a href="#contact">Contact</a></li>
-        <li className="nav-item"><a href="#profile">Account</a></li>
+        <li className="nav-item"><p>{user?.uid}</p></li>
+        <li className="nav-item"><p>{user?.userName}</p></li>
+        <li className="nav-item"><p>{user?.email}</p></li>
       </ul>
       <div className="search-engine">
         <input
