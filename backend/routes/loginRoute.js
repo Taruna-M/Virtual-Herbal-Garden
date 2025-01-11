@@ -7,7 +7,8 @@ const { loginController } = require('../controllers/accController')
 router.get("/google",
     passport.authenticate("google", { 
         scope: ["profile", "email"],
-        session: false //session false for stateless auth
+        session: false, //session false for stateless auth
+        prompt: 'select_account' //For popping the google sign in window for every login to allow users to choose an account.
     })
 );
 

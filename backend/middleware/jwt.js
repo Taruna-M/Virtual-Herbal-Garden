@@ -4,7 +4,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 // user = { userName, email, uid }
 const createJWT = (user) => {
-  const token = jwt.sign(user, JWT_SECRET, { expiresIn: "1d" });
+  const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: "1d" });
   return token;
 };
 

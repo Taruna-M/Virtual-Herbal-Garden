@@ -37,7 +37,7 @@ const LoginPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    window.location.href = `${process.env.REACT_APP_API_URL}/auth/google`
+    window.location.href = `http://localhost:5001/auth/google`
   };
   
   return (
