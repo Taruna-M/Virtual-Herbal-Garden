@@ -2,6 +2,12 @@ import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import './gemini.css';
 
+//unity to react communication
+import useHideBtn  from '../Hooks/useHideBtn'
+
+//react to unity communication
+import useHandleUnityInput from '../Hooks/useHandleUnityInput';
+
 const GeminiComponent = () => {
     const [inputText, setInputText] = useState('');
     const [messages, setMessages] = useState([]);
@@ -12,6 +18,11 @@ const GeminiComponent = () => {
     const inputRef = useRef(null);
     const flowerInterval = useRef(null); // For managing interval
     const sparkRef = useRef(null); // For managing spark animation
+    const geminiIcon = useRef(null); // For icon display from unity control
+    const [unityInputStatus, setUnityInputStatus] = useState('enable');
+
+    useHideBtn(geminiIcon);
+    useHandleUnityInput(unityInputStatus);
 
     // Show chat bubble for 5 seconds on load
     useEffect(() => {
@@ -82,7 +93,7 @@ const GeminiComponent = () => {
 
     return (
         <div className="gemini">
-            <div className="gemini-icon" onClick={handleToggleChatbox}>
+            <div className="gemini-icon" onClick={handleToggleChatbox} ref={geminiIcon}>
                 <img 
                     src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxVpnh7BKIqqNW9bIXAXMo34olLvPA0CxXfg&s" 
                     alt="Gemini Logo" 
@@ -110,8 +121,10 @@ const GeminiComponent = () => {
                         placeholder="Type a message..."
                         value={inputText}
                         onChange={(e) => setInputText(e.target.value)}
+                        onFocus={() => setUnityInputStatus('disable')}
+                        onBlur={() => setUnityInputStatus('enable')}
                     />
-                    <button className="send-button" onClick={handleSubmit}>
+                    <button className="send-button" onClick={handleSubmit} style={{zIndex:"2000"}}>
                         <img 
                             src="https://www.shutterstock.com/image-vector/green-fill-message-send-icon-260nw-2396311513.jpg" 
                             alt="Send" 

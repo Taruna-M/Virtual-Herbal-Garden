@@ -1,9 +1,12 @@
+// backend/routes/app.js
 const express = require('express');
 const axios = require('axios');
+const mongoose = require('mongoose');
 const router = express.Router();
 
 const geminiApiKey = process.env.GEMINI_API_KEY;
 
+// Existing Gemini API route
 router.post('/generate-content', async (req, res) => {
   try {
     const response = await axios.post(
@@ -29,5 +32,6 @@ router.post('/generate-content', async (req, res) => {
     res.status(500).json({ error: 'An error occurred while processing your request.' });
   }
 });
+
 
 module.exports = router;
