@@ -28,12 +28,13 @@ const geminiRoute = require('./routes/geminiRoute');
 const noteRoute = require('./routes/notesRoute');
 const loginRoute = require('./routes/loginRoute');
 const accRoute = require('./routes/accRoute');
-
+const dfRoute = require('./routes/dfRoute');
 //routes
 app.use('/api', geminiRoute);
 app.use('/api/notes', noteRoute);
 app.use('/auth', loginRoute);
 app.use('/acc', authenticateJWT, accRoute);
+app.use('/api/df', dfRoute);
 
 // Static file serving
 app.use(express.static(path.join(__dirname, '../front/public')));

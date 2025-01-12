@@ -7,6 +7,7 @@ import Gemini from "./Components/gemini";
 import PlantSearch from "./Components/scan";
 import { UnityProvider } from "./Context/UnityProvider";
 import Notes from "./Components/Notes"
+import Discussion from "./Components/Discussion";
 function App() {
   const [unityLoaded, setUnityLoaded] = useState(false);
 
@@ -30,6 +31,7 @@ function App() {
                   <PlantSearch/>
                   <Gemini/>
                   <Notes/>
+                  <Discussion/>
                 </>
               )}
             </>
