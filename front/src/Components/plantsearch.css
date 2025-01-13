@@ -27,9 +27,8 @@
 
 /* Popup Box */
 .plant-search-box {
-    position: fixed;
-    bottom: 150px; /* Adjusted to match icon position */
-    right: 20px;
+   margin-top: 10vh;
+   margin-left: -50vw;
     width: 380px;
     background: #e8f5e9; /* Light green background */
     border-radius: 10px;
@@ -64,6 +63,40 @@
     border-radius: 8px;
     margin-right: 10px; /* Space between the camera and the captured image */
   }
+  button {
+    background: none; /* Removes background color */
+    border: none; /* Removes border */
+    padding: 10px 15px; /* Adds padding for a better appearance */
+    color: inherit; /* Ensures text color matches parent element */
+    font-size: 16px; /* Adjust text size */
+    cursor: pointer; /* Changes cursor to pointer on hover */
+    outline: none; /* Removes focus outline */
+  }
+  
+  button:focus {
+    outline: none; /* Ensures no outline on focus */
+    box-shadow: none; /* Prevents shadow effects */
+  }
+  
+  .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    background: transparent; /* Ensures no background */
+    border: none; /* Removes border */
+    color: #333; /* Default button color */
+    cursor: pointer;
+  }
+  
+  .close-btn:hover {
+    color: red; /* Changes color to red on hover */
+  }
+  
+  button:active {
+    background: transparent; /* Prevents any background on click */
+  }
+  
   
   .captured-image {
     width: 120px;  /* Adjust the width of the captured image */
@@ -155,3 +188,12 @@
 .plant-search-content::-webkit-scrollbar-thumb:hover {
     background-color: #66bb6a; /* Darker green on hover */
 }
+button {
+    outline: none;
+  }
+  
+  button:hover {
+    outline: none;
+    box-shadow: none;
+  }
+  

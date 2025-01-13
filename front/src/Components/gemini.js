@@ -1,13 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import './gemini.css';
-
+import { FaRobot } from 'react-icons/fa';
 //unity to react communication
 import useHideBtn  from '../Hooks/useHideBtn'
 
 //react to unity communication
 import useHandleUnityInput from '../Hooks/useHandleUnityInput';
-
 const GeminiComponent = () => {
     const [inputText, setInputText] = useState('');
     const [messages, setMessages] = useState([]);
@@ -36,9 +35,12 @@ const GeminiComponent = () => {
     const handleToggleChatbox = () => {
         setIsChatboxActive(!isChatboxActive);
         if (!isChatboxActive) {
-            // Start the spark animation
             startSparkAnimation();
         }
+    };
+
+    const handleCloseChatbox = () => {
+        setIsChatboxActive(false);
     };
 
     const startSparkAnimation = () => {
@@ -50,42 +52,42 @@ const GeminiComponent = () => {
 
     const handleSubmit = async () => {
         if (inputText.trim() === '') return;
+        setInputText('');
 
-        // Add user's message to the chat
-        setMessages(prevMessages => [
+        setMessages((prevMessages) => [
             ...prevMessages,
-            { text: inputText, type: 'user' }
+            { text: inputText, type: 'user' },
         ]);
 
         setIsLoading(true);
-        setFlowerCount(1); // Start with one flower
+        setFlowerCount(1);
 
         flowerInterval.current = setInterval(() => {
-            setFlowerCount(prevCount => (prevCount === 3 ? 1 : prevCount + 1));
-        }, 500); // Change flower count every 500ms
+            setFlowerCount((prevCount) => (prevCount === 3 ? 1 : prevCount + 1));
+        }, 500);
 
         try {
-            const response = await axios.post('http://localhost:5000/api/generate-content', {
+            const response = await axios.post('http://localhost:5001/api/generate-content', {
                 text: inputText,
             });
             const yo = response.data.candidates[0].content.parts[0].text;
+            console.log(yo);
             const formattedText = yo
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                 .replace(/\n/g, '<br>');
 
-            // Add a delay before showing the API response
             setTimeout(() => {
-                setMessages(prevMessages => [
+                setMessages((prevMessages) => [
                     ...prevMessages,
-                    { text: formattedText, type: 'api' }
+                    { text: formattedText, type: 'api' },
                 ]);
                 setIsLoading(false);
-                clearInterval(flowerInterval.current); // Clear the interval
+                clearInterval(flowerInterval.current);
             }, 1000);
         } catch (error) {
             console.error('Error making API request:', error);
             setIsLoading(false);
-            clearInterval(flowerInterval.current); // Clear the interval
+            clearInterval(flowerInterval.current);
         } finally {
             setInputText('');
         }
@@ -93,26 +95,45 @@ const GeminiComponent = () => {
 
     return (
         <div className="gemini">
-            <div className="gemini-icon" onClick={handleToggleChatbox} ref={geminiIcon}>
-                <img 
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxVpnh7BKIqqNW9bIXAXMo34olLvPA0CxXfg&s" 
-                    alt="Gemini Logo" 
-                    style={{height:"50px"}} 
-                    className="glow-effect" // Add the glow effect
-                />
-                {showChatBubble && (
-                    <div className="chat-bubble">Hey! Any help?</div>
-                )}
+            <div onClick={handleToggleChatbox} ref={geminiIcon}>
+                <div className="icon-circle">
+                    <FaRobot size={14} color="white" />
+                </div>
+                {showChatBubble && <div className="chat-bubble">Hey! Any help?</div>}
             </div>
-            <div className={`gemini-chatbox ${isChatboxActive ? 'active' : ''}`} ref={sparkRef}>
-                <div className="spark"></div> {/* Spark animation */}
+            <div
+                className={`gemini-chatbox ${isChatboxActive ? 'active' : ''}`}
+                ref={sparkRef}
+            >
+                <button
+                    style={{color:"white",marginLeft:"530px",width:"40px",background:"none"}}
+                    onClick={handleCloseChatbox}
+                >
+                    Close
+                </button>
+                <div className="spark"></div>
                 <div className="response-area">
+                    <b
+                        style={{
+                            fontSize: '30px',
+                            textAlign: 'center',
+                            color: 'white',
+                            marginLeft: '90px',
+                        }}
+                    >
+                        Hello there! Talk to our bot!
+                    </b>
                     {messages.map((msg, index) => (
-                        <div key={index} className={`message ${msg.type === 'user' ? 'user-message' : 'api-response'}`}>
+                        <div
+                            key={index}
+                            className={`message ${
+                                msg.type === 'user' ? 'user-message' : 'api-response'
+                            }`}
+                        >
                             <div dangerouslySetInnerHTML={{ __html: msg.text }} />
                         </div>
                     ))}
-                    {isLoading && <FlowerIndicator count={flowerCount} />} {/* Pass flowerCount to the indicator */}
+                    {isLoading && <FlowerIndicator count={flowerCount} />}
                 </div>
                 <div className="input-area">
                     <textarea
@@ -124,11 +145,15 @@ const GeminiComponent = () => {
                         onFocus={() => setUnityInputStatus('disable')}
                         onBlur={() => setUnityInputStatus('enable')}
                     />
-                    <button className="send-button" onClick={handleSubmit} style={{zIndex:"2000"}}>
-                        <img 
-                            src="https://www.shutterstock.com/image-vector/green-fill-message-send-icon-260nw-2396311513.jpg" 
-                            alt="Send" 
-                            style={{height:"40px",width:"100px",borderRadius:"50%"}}
+                    <button
+                        className="send-button"
+                        onClick={handleSubmit}
+                        style={{ zIndex: '2000' }}
+                    >
+                        <img
+                            src="https://www.shutterstock.com/image-vector/green-fill-message-send-icon-260nw-2396311513.jpg"
+                            alt="Send"
+                            style={{ height: '40px', width: '100px', borderRadius: '50%' }}
                         />
                     </button>
                 </div>
@@ -141,9 +166,21 @@ const GeminiComponent = () => {
 const FlowerIndicator = ({ count }) => {
     return (
         <div className="flower-indicator">
-            <span className={`flower flower-1 ${count === 1 ? 'bounce' : ''}`}>🌼</span>
-            <span className={`flower flower-2 ${count === 2 ? 'bounce' : ''}`}>🌼</span>
-            <span className={`flower flower-3 ${count === 3 ? 'bounce' : ''}`}>🌼</span>
+            <span
+                className={`flower flower-1 ${count === 1 ? 'bounce' : ''}`}
+            >
+                🌼
+            </span>
+            <span
+                className={`flower flower-2 ${count === 2 ? 'bounce' : ''}`}
+            >
+                🌼
+            </span>
+            <span
+                className={`flower flower-3 ${count === 3 ? 'bounce' : ''}`}
+            >
+                🌼
+            </span>
         </div>
     );
 };

@@ -8,6 +8,7 @@ import PlantSearch from "./Components/scan";
 import { UnityProvider } from "./Context/UnityProvider";
 import Notes from "./Components/Notes"
 import Discussion from "./Components/Discussion";
+import IconMenu from "./Components/IconMenu";
 function App() {
   const [unityLoaded, setUnityLoaded] = useState(false);
 
@@ -27,11 +28,9 @@ function App() {
               {/* Show Navbar and Gemini only after Unity has loaded */}
               {unityLoaded && (
                 <>
-                  <Navbar/>
-                  <PlantSearch/>
-                  <Gemini/>
-                  <Notes/>
-                  <Discussion/>
+                 
+                  <IconMenu/>
+                  
                 </>
               )}
             </>

@@ -3,6 +3,7 @@ import { X, Plus, Trash2 } from "lucide-react";
 import "./Notes.css";
 import axios from 'axios';
 import useHandleUnityInput from '../Hooks/useHandleUnityInput';
+import { FaRegStickyNote } from "react-icons/fa";
 
 // Main Notes component for managing user notes with drag, resize, and CRUD operations
 const Notes = () => {
@@ -434,11 +435,13 @@ const Notes = () => {
   return (
     <div className="notes-container">
       <button
-        onClick={() => setIsOpen(true)}
-        className="add-note-button"
+        onClick={() => setIsOpen(true) }
+        style={{background:"none"}}
         aria-label="Open Notes"
       >
-        <Plus size={24} color="white" />
+        <div className="icon-circle" >
+                  < FaRegStickyNote size={14} color="white" />
+                </div>
       </button>
 
       {isOpen && (

@@ -285,32 +285,21 @@ const submitQuestion = async (e) => {
   return (
     <div style={{ position: "relative", zIndex: 99999 }}>
       
-    <div className="fixed bottom-4 right-4 z-50">
-    {!discussOpen && (
+    <div >
+    {
     <button
       onClick={() => setDiscussOpen(true)}
       style={{
-        position: "fixed",
-        bottom: "230px",
-        right: "16px",
-        width: "54px",
-        height: "54px",
-        backgroundColor: "#2ea043", // Lime green to match the image
-        borderRadius: "50%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        border: "none",
-        cursor: "pointer",
-        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.2)",
-        zIndex: 99999,
-        transition: "all 0.3s ease",
+        background:"none",
+        zIndex: 99999
       }}
       aria-label="Open Discussion"
     >
-      <MessageCircle size={24} color="white" />
+     <div className="icon-circle" >
+               <MessageCircle size={14} color="white" />
+             </div>
     </button>
-  )}
+  }
 
       {discussOpen && (
         <div
@@ -323,8 +312,8 @@ const submitQuestion = async (e) => {
           zIndex: 100000,
         }}
       >
-        <div className="fixed inset-0 bg-stone/50 flex items-center justify-center z-50">
-          <div className="w-[800px] h-[650px] bg-stone rounded-lg shadow-xl overflow-hidden">
+        <div className="fixed inset-0 bg-stone/50 flex items-center justify-center z-50" style={{marginLeft:"-1000px",marginTop:"210px",height:"80px !important"}}>
+          <div className="w-[800px] h-[500px] bg-stone rounded-lg shadow-xl overflow-auto">
             {/* Header */}
             <div className="bg-emerald-700 text-stone-50 p-3 flex items-center">
               <button 

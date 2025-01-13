@@ -5,7 +5,7 @@ import './plantsearch.css';
 import { FaLeaf } from 'react-icons/fa';
 
 //unity to react communication
-import useHideBtn  from '../Hooks/useHideBtn'
+import useHideBtn from '../Hooks/useHideBtn';
 
 function PlantSearch() {
   const [plantData, setPlantData] = useState(null);
@@ -23,9 +23,8 @@ function PlantSearch() {
   };
 
   const clearCapture = () => {
-    setImageSrc(null); 
-     // Clears the captured image
-     setPlantData(null)
+    setImageSrc(null);
+    setPlantData(null);
   };
 
   const handleSubmit = async (e) => {
@@ -71,7 +70,7 @@ function PlantSearch() {
     const mime = arr[0].match(/:(.*?);/)[1];
     const bstr = atob(arr[1]);
     const u8arr = new Uint8Array(bstr.length);
-    for (let i = 0; i < bstr.length; i++) {
+    for (let i = 0; bstr.length > i; i++) {
       u8arr[i] = bstr.charCodeAt(i);
     }
     return new File([u8arr], filename, { type: mime });
@@ -79,12 +78,20 @@ function PlantSearch() {
 
   return (
     <>
-      <button className="plant-icon-btn" onClick={() => setIsCameraOpen(!isCameraOpen)} ref={herbiLensIcon}>
-        <FaLeaf size={24} />
+      <button onClick={() => setIsCameraOpen(!isCameraOpen)} ref={herbiLensIcon} style={{background:"none"}}> 
+        <div className="icon-circle">
+          <FaLeaf size={14} color="white" />
+        </div>
       </button>
 
       {isCameraOpen && (
         <div className="plant-search-box">
+          <button
+            style={{color:"black",marginLeft:"320px",width:"40px",background:"none"}}
+            onClick={() => setIsCameraOpen(false)}
+          >
+            Close
+          </button>
           <h2>Plant Search</h2>
           <div className="webcam-container">
             <Webcam ref={webcamRef} audio={false} screenshotFormat="image/jpeg" className="webcam" />
@@ -94,7 +101,7 @@ function PlantSearch() {
           <div className="button-group">
             <button onClick={capture}>Capture</button>
             <button onClick={handleSubmit}>Identify</button>
-            <button onClick={clearCapture} className="clear-btn">Clear</button>  {/* Clear button */}
+            <button onClick={clearCapture} className="clear-btn">Clear</button>
           </div>
 
           {loading && <p>Identifying plant...</p>}

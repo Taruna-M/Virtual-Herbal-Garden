@@ -10,7 +10,7 @@ const geminiApiKey = process.env.GEMINI_API_KEY;
 router.post('/generate-content', async (req, res) => {
   try {
     const response = await axios.post(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${geminiApiKey}`,
+      `https://generativelanguage.googleapis.com/v1/tunedModels/generate-num-711:generateContent?key=${geminiApiKey}`,
       {
         contents: [
           {
