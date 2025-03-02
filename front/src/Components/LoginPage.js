@@ -1,55 +1,48 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import GoogleButton from 'react-google-button'
 import './login.css'; 
 
-const LoginPage = ({onLogin}) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+const LoginPage = () => {
   const [fadeOut, setFadeOut] = useState(false);
+  const hasloggedIn = useRef(false); //used to make sure useEffect doesnt render multiple times
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (hasloggedIn.current) return;
+    hasloggedIn.current = true;
+
+    const queryParams = new URLSearchParams(window.location.search);
+    const uid = queryParams.get('uid');
+
+    if (uid) {
+      alert('Login Successful');
+      sessionStorage.setItem('uid', uid);
+      setFadeOut(true);
+      axios.get(`${process.env.REACT_APP_API_URL}/acc/${uid}`, { withCredentials: true }) //withCredentials sends cookies
+      .then((res) => {
+        if (res.data) {
+          setTimeout(() => {
+            navigate(`/garden/${uid}`, {state: res.data.payload});
+          }, 500);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    }
+  }, [navigate]);
   
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // Simulate login logic
-    setFadeOut(true);
-        alert('Login Successful')
-  
-        // Wait for the fade-out animation to finish, then call onLogin
-        setTimeout(() => {
-          onLogin();
-        }, 500); // Match the duration of the fade-out transition
-
-    // Trigger Unity animation if it's loade
+    window.location.href = `http://localhost:5001/auth/google`
   };
-
+  
   return (
-    <div>
-        <div className={`login-container ${fadeOut ? 'fade-out' : ''}`}>
-        <form className="login-form">
-          <h2>Login</h2>
-          <div className="input-container">
-            <label>Username: </label>
-            <input
-              className="form-control"
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
-          </div>
-          <div className="input-container">
-            <label>Password: </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          <button type="button" onClick={handleSubmit}>Login</button>
-        </form>
-      </div>
-      
+    <div className={`login-container ${fadeOut ? 'fade-out' : ''}`}>
+       <GoogleButton onClick={handleSubmit}/>
     </div>
   );
 };

@@ -1,0 +1,421 @@
+/* Container styles */
+.notes-container {
+    position: relative;
+    z-index: 99999;
+}
+
+/* Add note button styles */
+.add-note-button {
+    position: fixed;
+    bottom: 160px;
+    right: 16px;
+    width: 54px;
+    height: 54px;
+    background-color: #2ea043;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    z-index: 99999;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    color: white;
+    transition: background-color 0.3s, transform 0.2s ease;
+}
+
+/* Modified: Remove blue color on hover for Add Note button */
+.add-note-button:hover {
+    background-color: #2c974b;
+    transform: scale(1.05);
+    color: white; /* Ensure no color change */
+}
+
+/* Modal overlay styles */
+.notes-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100000;
+}
+
+.notes-overlay-background {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Main window styles */
+.notes-window {
+    background-color: rgba(209, 224, 192, 0.85);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    z-index: 100001;
+    margin-left: -87vw;
+   margin-top: -60px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+.notes-window.is-dragging {
+    cursor: grabbing;
+    transition: none;
+}
+
+.notes-window:not(.is-dragging) {
+    transition: all 0.2s ease;
+    cursor: default;
+}
+
+/* Resize handles */
+.resize-handle {
+    position: absolute;
+}
+
+.resize-handle-e {
+    right: -3px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 50px;
+    cursor: ew-resize;
+}
+
+.resize-handle-s {
+    bottom: -3px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 6px;
+    width: 50px;
+    cursor: ns-resize;
+}
+
+.resize-handle-se {
+    bottom: -3px;
+    right: -3px;
+    width: 12px;
+    height: 12px;
+    cursor: se-resize;
+    border-radius: 50%;
+}
+
+.resize-handle.is-resizing {
+    background-color: rgba(46, 160, 67, 0.5);
+}
+
+/* Header styles */
+.notes-header {
+    display: flex;
+    align-items: center;
+    margin: -24px -24px 24px -24px;
+    padding: 16px 24px;
+    background-color: rgba(46, 160, 67, 0.9);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    position: relative;
+    z-index: 100002;
+    cursor: grab;
+}
+
+.notes-header.is-dragging {
+    cursor: grabbing;
+}
+
+.notes-title {
+    margin: 0;
+    color: white;
+    font-size: 24px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Header buttons */
+.header-button {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background-color 0.2s ease;
+}
+
+.header-button:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Note form styles */
+.note-form {
+    position: absolute;
+    inset: 0;
+    background-color: white;
+    border-radius: 8px;
+    padding: 24px;
+    z-index: 100002;
+}
+
+.note-form-container {
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.note-form-header {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+}
+
+.back-button {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 16px;
+    cursor: pointer;
+    display: block;
+    text-align: right;
+    width: 100%;
+    transition: color 0.2s ease;
+}
+
+/* Modified: Remove blue color on hover for back button */
+.back-button:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    color: #666;
+}
+
+.note-date {
+    color: #666;
+    font-size: 14px;
+    margin-top: 8px;
+}
+
+.note-title-input {
+    font-size: 24px;
+    margin-bottom: 16px;
+    border: none;
+    outline: none;
+    padding: 4px;
+}
+
+.note-content-textarea {
+    flex: 1;
+    font-size: 16px;
+    border: none;
+    outline: none;
+    padding: 4px;
+    resize: none;
+    font-family: inherit;
+}
+
+/* Notes grid styles - Added to prevent grid cell stretching */
+.notes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    overflow-y: auto;
+    padding: 0 0 24px 0;
+    height: calc(100% - 80px);
+    align-items: start; /* Prevent stretching */
+}
+
+/* Note card styles */
+.note-card {
+    margin-top: 10px;
+    padding: 24px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    border: 1.5px solid #2ea043;
+    position: relative;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    
+    /* Fixed dimensions */
+    width: calc(100% - 8px);
+    min-width: calc(100% - 8px);
+    max-width: calc(100% - 8px);
+    height: 160px;
+    min-height: 160px;
+    max-height: 160px;
+    
+    /* Ensure content stays within bounds */
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    flex-grow: 0;
+    box-sizing: border-box;
+}
+
+
+.note-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(46, 160, 67, 0.15);
+    border-color: #2ea043;
+}
+
+.delete-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 24px;
+    height: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease, background-color 0.2s ease;
+    outline: none; /* Removes focus outline */
+}
+
+.note-card:hover .delete-button {
+    opacity: 1;
+}
+
+/* Ensure no unwanted styles are applied */
+.delete-button:hover,
+.delete-button:focus,
+.delete-button:active {
+    background-color: transparent; /* Prevent any background change */
+    outline: none; /* Removes focus ring */
+    box-shadow: none; /* Prevent any shadow on hover */
+}
+
+/* Specific hover styling for the icon inside the button */
+.delete-button:hover svg {
+    background-color: transparent; /* Prevent any color change */
+    color: #666; /* Adjust icon color as needed */
+    transform: none; /* Remove scaling or animations */
+}
+
+/* Content styles to ensure proper containment */
+.note-card-date {
+    color: #666;
+    font-size: 12px;
+    margin-bottom: 12px;
+    flex-shrink: 0;
+}
+
+.note-card-title {
+    margin: 0 0 12px 0;
+    font-size: 20px;
+    color: #2ea043;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 0;
+}
+
+.note-card-content {
+    margin: 0;
+    color: #666;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    line-height: 1.5;
+    font-size: 14px;
+    flex: 1;
+    min-height: 0; /* Allows proper overflow handling */
+}
+/* Container for main and sub icons */
+.icon-container {
+    position: absolute;
+    top: 10%; /* Center vertically */
+    left: 96%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust for proper centering */
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 1000;
+  }
+  
+  /* Main circular icon */
+  .main-icon {
+    width: 50px;
+    height: 50px;
+    background-color: black;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s ease;
+  }
+  
+  /* Sub-icons hidden by default */
+  .sub-icon {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.5s ease;
+  }
+  
+  /* Sub-icons become visible */
+  .sub-icon.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+  
+  /* Circular styling for sub-icons */
+  .icon-circle {
+    width: 30px;
+    height: 30px;
+    background-color: black;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Adjusted positions for smoother arc */
+  .sub1 {
+    top: -30px; /* Slightly above the main icon */
+    left: -20px;
+    transition-delay: 0.1s;
+  }
+  
+  .sub2 {
+    top: 0; /* Left and aligned horizontally */
+    left: -60px;
+    transition-delay: 0.2s;
+  }
+  
+  .sub3 {
+    top: 40px; /* Below and slightly to the left */
+    left: -50px;
+    transition-delay: 0.3s;
+  }
+  
+  .sub4 {
+    top: 60px; /* Bottom-left */
+    left: -10px;
+    transition-delay: 0.4s;
+  }
+  
+  /* Rotate main icon on click */
+  .icon-container .main-icon:active {
+    transform: rotate(45deg);
+  }
+  

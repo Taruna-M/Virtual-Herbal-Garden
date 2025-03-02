@@ -1,6 +1,6 @@
 
 .gemini {
-    z-index: 1000;
+    z-index: 3000;
 }
 
 .gemini-icon {
@@ -35,19 +35,21 @@
 
 /* Chatbox Styles */
 .gemini-chatbox {
-    width: 50vw; /* Set to half of the viewport width */
-    max-width: 400px; /* Optional: limit the max width */
-    height: auto; /* Automatically adjust height */
+     /* Set to half of the viewport width */
+     /* Optional: limit the max width */
+    /* Automatically adjust height */
+    width:600px;
+    max-height: 70vh;
+    
     background-color: #49570A;
     background-size: cover; /* Cover the chatbox area */
     border: 1px solid #ccc;
     border-radius: 8px;
-    position: fixed; /* Position it over the icon */
-    bottom: 80px; /* Adjust based on icon position */
-    right: 20px; /* Keep it aligned with the icon */
+    margin-top: 10vh !important;
+    margin-left: -63vw !important;
     padding: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    z-index: 99; /* Ensure chatbox is above other content, but below the icon */
+    z-index: 3000; /* Ensure chatbox is above other content, but below the icon */
     display: none; /* Initially hide the chatbox */
 }
 
@@ -58,17 +60,7 @@
 /* Other styles remain the same... */
 
 /* Spark Animation */
-.spark {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border: 2px solid transparent; /* Placeholder for the spark border */
-    border-radius: 8px; /* Match the border radius of the chatbox */
-    z-index: -1; /* Behind the chatbox */
-    animation: spark-animation 4s linear infinite; /* Spark animation */
-}
+
 
 @keyframes spark-animation {
     0% {
@@ -90,9 +82,10 @@
 
 /* Scrollable response area */
 .response-area {
-    max-height: 60vh; /* Limit height to 60% of the viewport height */
+    /* Limit height to 60% of the viewport height */
     overflow-y: auto; /* Allow vertical scrolling */
-    margin-bottom: 10px; /* Space above the input */
+    /* Space above the input */
+    max-height: 55vh;
 }
 
 /* Individual message styles */
@@ -187,6 +180,7 @@
     display: flex; /* Center icon */
     justify-content: center; /* Center icon */
     align-items: center; /* Center icon */
+    z-index: 3000 !important;
 }
 
 .send-button img {
@@ -259,3 +253,146 @@
 }
 
 /* Rest of your existing CSS */
+/* Container for main and sub icons */
+.icon-container {
+    position: absolute;
+    top: 10%; /* Center vertically */
+    left: 96%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust for proper centering */
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 1000;
+  }
+  
+  /* Main circular icon */
+  .main-icon {
+    width: 50px;
+    height: 50px;
+    background-color: black;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s ease;
+  }
+  
+  /* Sub-icons hidden by default */
+  .sub-icon {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.5s ease;
+  }
+  
+  /* Sub-icons become visible */
+  .sub-icon.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+  
+  /* Circular styling for sub-icons */
+  .icon-circle {
+    width: 30px;
+    height: 30px;
+    background-color: black;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Adjusted positions for smoother arc */
+  .sub1 {
+    top: -30px; /* Slightly above the main icon */
+    left: -20px;
+    transition-delay: 0.1s;
+  }
+  
+  .sub2 {
+    top: 0; /* Left and aligned horizontally */
+    left: -60px;
+    transition-delay: 0.2s;
+  }
+  
+  .sub3 {
+    top: 40px; /* Below and slightly to the left */
+    left: -50px;
+    transition-delay: 0.3s;
+  }
+  
+  .sub4 {
+    top: 60px; /* Bottom-left */
+    left: -10px;
+    transition-delay: 0.4s;
+  }
+  
+  /* Rotate main icon on click */
+  .icon-container .main-icon:active {
+    transform: rotate(45deg);
+  }
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+    .gemini-chatbox {
+        width: 80vw; /* Set to 80% of the viewport width on smaller screens */
+        margin-left: -40vw !important; /* Adjust position */
+        height: 60vh; /* Set the height to 60% of the viewport height */
+    }
+
+    .input-area {
+        margin-top: 5px; /* Reduce space for smaller screens */
+    }
+
+    /* Adjust message area height for smaller screens */
+    .response-area {
+        height: 50vh; /* Set height to 50% of the viewport height */
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .gemini-chatbox {
+        width: 90vw; /* Set to 90% of the viewport width on very small screens */
+        height: 70vh; /* Set to 70% of the viewport height */
+        margin-left: -45vw !important; /* Adjust the position further */
+    }
+
+    .response-area {
+        height: 40vh; /* Set height to 40% of the viewport height for small screens */
+    }
+
+    .input-area {
+        margin-top: 2px; /* Reduce space between messages and input */
+    }
+
+    .send-button {
+        width: 35px; /* Adjust size of the send button */
+        height: 35px; /* Adjust size of the send button */
+    }
+
+    .input-box {
+        font-size: 12px; /* Smaller font size */
+    }
+}
+
+/* Optional: Further fine-tune the positioning of elements */
+@media screen and (max-width: 320px) {
+    .gemini-chatbox {
+        width: 95vw; /* Further reduce width for very small screens */
+        height: 70vh;
+        margin-left: -47vw !important;
+    }
+
+    .send-button {
+        width: 30px; /* Even smaller button for small screens */
+        height: 30px;
+    }
+
+    .input-box {
+        font-size: 10px; /* Even smaller font size */
+    }
+}
